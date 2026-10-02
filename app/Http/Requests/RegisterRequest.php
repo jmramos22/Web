@@ -32,7 +32,7 @@ class RegisterRequest extends FormRequest
                 'regex:/^[a-zA-Z0-9._%+-]+@uas\.edu\.mx$/i'
             ],
             'password' => 'required|string|min:8',
-            'carrera' => 'required|string|max:100',
+            'carrera' => ['required', 'string', 'exists:carreras,nombre'],
         ];
     }
 }

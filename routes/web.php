@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Carrera;
 
 // Redirección inicial
 Route::get('/', function () {
@@ -10,9 +11,7 @@ Route::get('/', function () {
 });
 
 // Rutas de Registro (HU-01)
-Route::get('/register', function () {
-    return view('auth.register');
-});
+
 Route::post('/register', [RegisterController::class, 'register']);
 
 // Rutas de Login (HU-02)
@@ -24,3 +23,9 @@ Route::post('/logout', [LoginController::class, 'logout']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth');
+
+//
+Route::get('/register', function () {
+    $carreras = Carrera::where('activa', true)->orderBy('nombre')->get();
+    return view('auth.register', compact('carreras'));
+});

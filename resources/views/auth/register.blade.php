@@ -23,7 +23,8 @@
         }
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        select {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -92,7 +93,14 @@
 
         <div class="form-group">
             <label for="carrera">Carrera:</label>
-            <input type="text" id="carrera" name="carrera" value="{{ old('carrera') }}" required>
+            <select id="carrera" name="carrera" required>
+                <option value="" disabled {{ old('carrera') ? '' : 'selected' }}>-- Selecciona una carrera --</option>
+                @foreach($carreras as $carrera)
+                <option value="{{ $carrera->nombre }}" {{ old('carrera') == $carrera->nombre ? 'selected' : '' }}>
+                    {{ $carrera->nombre }}
+                </option>
+                @endforeach
+            </select>
         </div>
 
         <button type="submit">Registrarse</button>
