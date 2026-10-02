@@ -1,31 +1,23 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Carrera;
 
-// Redirección inicial
+// Redirección inicial: mandamos al login
 Route::get('/', function () {
     return redirect('/login');
 });
 
-// Rutas de Registro (HU-01)
+// =========================================================
+// Rutas de vistas (solo HTML)
+// =========================================================
+// Todo el procesamiento (login, registro) se hace en el proyecto API (puerto 8001).
+// El modelo 'Carrera' y la BD ya NO se usan aquí.
 
-Route::post('/register', [RegisterController::class, 'register']);
+// Vista del formulario de login
+Route::view('/login', 'auth.login')->name('login');
 
-// Rutas de Login (HU-02)
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout']);
+// Vista del formulario de registro
+Route::view('/register', 'auth.register')->name('register');
 
-// Dashboard protegido (Tarea #19)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
-
-//
-Route::get('/register', function () {
-    $carreras = Carrera::where('activa', true)->orderBy('nombre')->get();
-    return view('auth.register', compact('carreras'));
-});
+// Vista del dashboard
+Route::view('/dashboard', 'dashboard')->name('dashboard');
