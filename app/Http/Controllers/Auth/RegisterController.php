@@ -19,10 +19,6 @@ class RegisterController extends Controller
             'carrera' => $request->carrera,
             'rol' => 'ESTUDIANTE', // Asignación por defecto requerida por la HU-01
         ]);
-
-        return response()->json([
-            'message' => 'Usuario registrado exitosamente',
-            'user' => $user
-        ], 201);
+        return redirect('/login')->with('success', 'Usuario registrado exitosamente. Por favor, inicia sesión.');
     }
 }
