@@ -72,6 +72,27 @@ Schema::create('users', function (Blueprint $table) {
 * **Formulario de Login:** `resources/views/auth/login.blade.php` (Tarea #17)
 * **Panel Principal / Dashboard:** `resources/views/dashboard.blade.php` (Tarea #19)
 
+#### Estilos de autenticación con Vite
+
+* Los estilos propios del formulario de inicio de sesión están en `resources/css/loginblade.css`; los del registro, en `resources/css/registerblade.css`.
+* Cada vista carga su hoja correspondiente con `@vite`: `resources/views/auth/login.blade.php` usa `@vite('resources/css/loginblade.css')` y `resources/views/auth/register.blade.php` usa `@vite('resources/css/registerblade.css')`. No se deben enlazar con rutas relativas como `resources/css/registerblade.css`, pues el navegador las resolvería respecto a la URL actual.
+* `vite.config.js` debe registrar ambas hojas (`resources/css/loginblade.css` y `resources/css/registerblade.css`) como entradas de Vite, junto con los recursos generales de la aplicación.
+* Cuando se añade o cambia una entrada de Vite, hay que regenerar el manifiesto. Si falta la entrada correspondiente en `public/build/manifest.json`, Laravel muestra `Unable to locate file in Vite manifest`.
+* Para instalar las dependencias y ejecutar el servidor de desarrollo de Vite:
+
+```bash
+npm ci
+npm run dev
+```
+
+* Para generar los recursos optimizados para producción:
+
+```bash
+npm run build
+```
+
+En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, se pueden ejecutar los mismos comandos con `npm.cmd` (por ejemplo, `npm.cmd run build`). La compilación genera los recursos versionados y el manifiesto de Vite en `public/build`; las vistas deben seguir usando `@vite` para cargarlos.
+
 ### 4. Enrutamiento (`routes/web.php`)
 
 <?php

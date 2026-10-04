@@ -4,30 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Principal - Tutorías UAS</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        .user-card {
-            background-color: #f4f4f4;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 8px 15px;
-            background-color: #c9302c;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+    @vite('resources/css/dashboardblade.css')
+    
 </head>
 <body>
 

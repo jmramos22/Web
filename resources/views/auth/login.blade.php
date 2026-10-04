@@ -4,84 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Tutorías UAS</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #004080;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #002b55;
-        }
-        .error-list {
-            color: red;
-            background-color: #fdd;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-        .links {
-            margin-top: 15px;
-            text-align: center;
-        }
-    </style>
+    @vite('resources/css/loginblade.css')
+
 </head>
 <body>
 
-    <h2>Iniciar Sesión (HU-02)</h2>
+    <main class="login-page">
+        <section class="login-intro" aria-label="Información de Tutorías UAS">
+            <p class="brand-label">UNIVERSIDAD AUTÓNOMA DE SINALOA</p>
+            <h1>Tutorías UAS</h1>
+            <p class="intro-copy">Conecta con el conocimiento. Encuentra apoyo académico y comparte lo que sabes con nuestra comunidad.</p>
+        </section>
 
-    {{-- Contenedor para errores que vienen de la API --}}
-    <div id="error-container" class="error-list" style="display: none;">
-        <ul id="error-list"></ul>
-    </div>
+        <section class="login-card" aria-labelledby="login-title">
+            <p class="card-eyebrow">PLATAFORMA ACADÉMICA</p>
+            <h2 id="login-title">Bienvenido de nuevo</h2>
+            <p class="card-copy">Inicia sesión para continuar con tus tutorías.</p>
 
-    <form id="login-form">
+            {{-- Contenedor para errores que vienen de la API --}}
+            <div id="error-container" class="error-list" style="display: none;">
+                <ul id="error-list"></ul>
+            </div>
 
-        <div class="form-group">
-            <label for="correo_institucional">Correo Institucional:</label>
-            <input type="email" id="correo_institucional" name="correo_institucional" required autofocus>
-        </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="correo_institucional">Correo institucional</label>
+                    <input type="email" id="correo_institucional" name="correo_institucional" autocomplete="username" placeholder="nombre@uas.edu.mx" required autofocus>
+                </div>
 
-        <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" required>
+                </div>
 
-        <button type="submit">Ingresar</button>
-    </form>
+                <button type="submit">Iniciar sesión</button>
+            </form>
 
-    <div class="links">
-        <p>¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
-    </div>
+            <div class="links">
+                <p>¿Aún no tienes cuenta? <a href="/register">Regístrate aquí</a></p>
+            </div>
+        </section>
+    </main>
 
     <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {

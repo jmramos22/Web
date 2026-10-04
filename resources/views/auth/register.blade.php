@@ -4,107 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario - Tutorías UAS</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 450px;
-            margin: 40px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #004080;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #002b55;
-        }
-        .error-list {
-            color: red;
-            background-color: #fdd;
-            padding: 10px 20px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-        .success-list {
-            color: green;
-            background-color: #dfd;
-            padding: 10px 20px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-    </style>
+    @vite('resources/css/registerblade.css')
 </head>
 <body>
 
-    <h2>Registro de Usuario (Sprint 1)</h2>
+    <main class="register-page">
+        <section class="register-intro" aria-label="Información de Tutorías UAS">
+            <p class="brand-label">UNIVERSIDAD AUTÓNOMA DE SINALOA</p>
+            <h1>Únete a Tutorías UAS</h1>
+            <p class="intro-copy">Crea tu cuenta para conectar con tutores, compartir conocimientos y avanzar en tu formación académica.</p>
+        </section>
 
-    {{-- Contenedor para errores de la API --}}
-    <div id="error-container" class="error-list" style="display: none;">
-        <ul id="error-list"></ul>
-    </div>
+        <section class="register-card" aria-labelledby="register-title">
+            <p class="card-eyebrow">COMUNIDAD ACADÉMICA</p>
+            <h2 id="register-title">Crear cuenta</h2>
+            <p class="card-copy">Completa tus datos para comenzar.</p>
 
-    {{-- Contenedor para éxito --}}
-    <div id="success-container" class="success-list" style="display: none;">
-        ¡Registro exitoso! Redirigiendo...
-    </div>
+            {{-- Contenedor para errores de la API --}}
+            <div id="error-container" class="error-list" style="display: none;">
+                <ul id="error-list"></ul>
+            </div>
 
-    <form id="register-form">
+            {{-- Contenedor para éxito --}}
+            <div id="success-container" class="success-list" style="display: none;">
+                ¡Registro exitoso! Redirigiendo...
+            </div>
 
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
-        </div>
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" autocomplete="given-name" placeholder="Tu nombre" required>
+                    </div>
 
-        <div class="form-group">
-            <label for="apellido">Apellido:</label>
-            <input type="text" id="apellido" name="apellido" required>
-        </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" autocomplete="family-name" placeholder="Tu apellido" required>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label for="correo_institucional">Correo Institucional (@uas.edu.mx):</label>
-            <input type="email" id="correo_institucional" name="correo_institucional" placeholder="ejemplo@uas.edu.mx" required>
-        </div>
+                <div class="form-group">
+                    <label for="correo_institucional">Correo institucional</label>
+                    <input type="email" id="correo_institucional" name="correo_institucional" autocomplete="email" placeholder="nombre@uas.edu.mx" required>
+                </div>
 
-        <div class="form-group">
-            <label for="password">Contraseña (mínimo 8 caracteres):</label>
-            <input type="password" id="password" name="password" required minlength="8">
-        </div>
+                <div class="form-group">
+                    <label for="password">Contraseña <span class="label-hint">(mínimo 8 caracteres)</span></label>
+                    <input type="password" id="password" name="password" autocomplete="new-password" placeholder="Crea una contraseña" required minlength="8">
+                </div>
 
-        <div class="form-group">
-            <label for="carrera">Carrera:</label>
-            <select id="carrera" name="carrera" required>
-                <option value="">-- Cargando carreras... --</option>
-            </select>
-        </div>
+                <div class="form-group">
+                    <label for="carrera">Carrera</label>
+                    <select id="carrera" name="carrera" required>
+                        <option value="">-- Cargando carreras... --</option>
+                    </select>
+                </div>
 
-        <button type="submit">Registrarse</button>
-    </form>
+                <button type="submit">Crear cuenta</button>
+            </form>
+
+            <div class="links">
+                <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
+            </div>
+        </section>
+    </main>
 
     <script>
     // =============================================
