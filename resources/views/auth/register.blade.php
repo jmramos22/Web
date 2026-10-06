@@ -73,6 +73,7 @@
     // =============================================
     // 1. Cargar carreras desde la API (con el diseño intacto)
     // =============================================
+    // Consulta las carreras disponibles y las agrega como opciones del selector del formulario.
     (async () => {
         try {
             const res = await fetch('http://127.0.0.1:8001/api/carreras', {
@@ -81,6 +82,7 @@
             const carreras = await res.json();
             const select = document.getElementById('carrera');
             select.innerHTML = '<option value="">-- Selecciona una carrera --</option>';
+            // Crea una opción seleccionable por cada carrera recibida de la API.
             carreras.forEach(c => {
                 const opt = document.createElement('option');
                 opt.value = c.nombre;
@@ -97,6 +99,7 @@
     // =============================================
     // 2. Enviar el formulario a la API
     // =============================================
+    // Envía los datos de registro, presenta la respuesta y guarda el token cuando hay éxito.
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -131,11 +134,13 @@
                 // Éxito: guardar token y redirigir
                 localStorage.setItem('auth_token', data.token);
                 successContainer.style.display = 'block';
+                // Da tiempo para que el usuario vea el mensaje de éxito antes de abrir el panel.
                 setTimeout(() => window.location.href = '/dashboard', 1500);
             } else {
                 // Error de validación: mostrar lista de errores
                 errorContainer.style.display = 'block';
                 if (data.errors) {
+                    // Muestra por separado cada mensaje de validación devuelto por la API.
                     Object.values(data.errors).flat().forEach(msg => {
                         const li = document.createElement('li');
                         li.textContent = msg;

@@ -18,7 +18,7 @@ class UserFactory extends Factory
     protected static ?string $password;
 
     /**
-     * Define the model's default state.
+     * Genera los atributos predeterminados para crear usuarios de prueba.
      *
      * @return array<string, mixed>
      */
@@ -34,10 +34,11 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Configura el usuario de prueba para que su correo no aparezca verificado.
      */
     public function unverified(): static
     {
+        // Devuelve una variante de la fábrica con la fecha de verificación vacía.
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);

@@ -28,6 +28,9 @@ class User extends Authenticatable
         'password',
     ];
 
+    /**
+     * Define las conversiones automáticas de atributos del modelo.
+     */
     protected function casts(): array
     {
         return [

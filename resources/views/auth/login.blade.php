@@ -47,6 +47,7 @@
     </main>
 
     <script>
+    // Procesa el inicio de sesión, muestra los errores de la API y redirige si las credenciales son válidas.
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -80,6 +81,7 @@
                 // Mostrar errores de validación o credenciales incorrectas
                 errorContainer.style.display = 'block';
                 if (data.errors) {
+                    // Convierte los errores recibidos en elementos de lista para mostrarlos al usuario.
                     Object.values(data.errors).flat().forEach(msg => {
                         const li = document.createElement('li');
                         li.textContent = msg;

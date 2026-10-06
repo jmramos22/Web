@@ -93,6 +93,12 @@ npm run build
 
 En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, se pueden ejecutar los mismos comandos con `npm.cmd` (por ejemplo, `npm.cmd run build`). La compilación genera los recursos versionados y el manifiesto de Vite en `public/build`; las vistas deben seguir usando `@vite` para cargarlos.
 
+#### Comunicación del frontend con la API
+
+* La URL base se configura mediante `VITE_API_URL` en el archivo local `.env` (por ejemplo, `http://127.0.0.1:8001/api`). Después de cambiarla, reinicia Vite para que recoja el valor.
+* `resources/js/api.js` centraliza las peticiones HTTP y las rutas de login, registro, carreras, usuario y logout. Las vistas cargan los módulos específicos `resources/js/login.js`, `resources/js/register.js` y `resources/js/dashboard.js`.
+* Los módulos de cada pantalla están registrados en `vite.config.js` y se cargan desde su vista Blade con `@vite`. Si se cambia la URL base durante desarrollo, reinicia `npm.cmd run dev`; para producción, establece la URL antes de ejecutar `npm.cmd run build`.
+
 ### 4. Enrutamiento (`routes/web.php`)
 
 <?php

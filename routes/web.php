@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // Redirección inicial: mandamos al login
+// Envía la raíz del sitio al formulario de inicio de sesión.
 Route::get('/', function () {
     return redirect('/login');
 });

@@ -33,6 +33,7 @@
     // =============================================
     // 2. Cargar datos del usuario desde la API
     // =============================================
+    // Solicita el perfil autenticado y actualiza los datos visibles en el panel.
     (async () => {
         try {
             const res = await fetch('http://127.0.0.1:8001/api/user', {
@@ -64,6 +65,7 @@
     // =============================================
     // 3. Cerrar sesión (API + limpiar token)
     // =============================================
+    // Invalida la sesión en la API, elimina el token local y vuelve al formulario de acceso.
     document.getElementById('logout-btn').addEventListener('click', async () => {
         try {
             await fetch('http://127.0.0.1:8001/api/logout', {
