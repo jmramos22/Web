@@ -180,6 +180,18 @@ button:hover {
     color: #176238;
 }
 
+.success-list p {
+    margin: 0 0 12px;
+}
+
+.success-list input {
+    margin-bottom: 10px;
+}
+
+.success-list button {
+    margin-bottom: 8px;
+}
+
 .error-list ul {
     margin: 0;
     padding-left: 20px;

@@ -25,9 +25,14 @@
                 <ul id="error-list"></ul>
             </div>
 
-            {{-- Contenedor para éxito --}}
+            {{-- La contraseña generada solo se muestra tras el registro y no se guarda en el navegador. --}}
             <div id="success-container" class="success-list" style="display: none;">
-                ¡Registro exitoso! Redirigiendo...
+                <p>¡Cuenta creada! Guarda esta contraseña; por seguridad solo se mostrará ahora.</p>
+                <label for="generated-password">Contraseña generada</label>
+                <input type="text" id="generated-password" readonly autocomplete="off">
+                <button type="button" id="copy-password-btn">Copiar contraseña</button>
+                <p id="copy-feedback" role="status" aria-live="polite"></p>
+                <button type="button" id="continue-btn">Continuar al perfil</button>
             </div>
 
             <form id="register-form">
@@ -46,11 +51,6 @@
                 <div class="form-group">
                     <label for="correo_institucional">Correo institucional</label>
                     <input type="email" id="correo_institucional" name="correo_institucional" autocomplete="email" placeholder="nombre@uas.edu.mx" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Contraseña <span class="label-hint">(mínimo 8 caracteres)</span></label>
-                    <input type="password" id="password" name="password" autocomplete="new-password" placeholder="Crea una contraseña" required minlength="8">
                 </div>
 
                 <div class="form-group">
@@ -106,11 +106,13 @@
         const errorContainer = document.getElementById('error-container');
         const errorList = document.getElementById('error-list');
         const successContainer = document.getElementById('success-container');
+        const submitButton = form.querySelector('button[type="submit"]');
 
         // Ocultar mensajes previos
         errorContainer.style.display = 'none';
         successContainer.style.display = 'none';
         errorList.innerHTML = '';
+        submitButton.disabled = true;
 
         try {
             const res = await fetch('http://127.0.0.1:8001/api/register', {
@@ -123,24 +125,28 @@
                     nombre: form.nombre.value,
                     apellido: form.apellido.value,
                     correo_institucional: form.correo_institucional.value,
-                    password: form.password.value,
                     carrera: form.carrera.value,
                 }),
             });
 
             const data = await res.json();
 
-            if (res.ok) {
-                // Éxito: guardar token y redirigir
+            if (res.ok && (!data.token || !data.generated_password)) {
+                // Evita presentar éxito si la API no devuelve los datos necesarios para continuar.
+                errorContainer.style.display = 'block';
+                const li = document.createElement('li');
+                li.textContent = 'La API no devolvió la contraseña generada. Intenta nuevamente o contacta al administrador.';
+                errorList.appendChild(li);
+            } else if (res.ok) {
+                // Solo persistimos el token; la clave temporal queda visible para que el usuario la guarde.
                 localStorage.setItem('auth_token', data.token);
+                document.getElementById('generated-password').value = data.generated_password;
+                form.style.display = 'none';
                 successContainer.style.display = 'block';
-                // Da tiempo para que el usuario vea el mensaje de éxito antes de abrir el panel.
-                setTimeout(() => window.location.href = '/dashboard', 1500);
             } else {
-                // Error de validación: mostrar lista de errores
+                // Mostrar errores de validación o registro.
                 errorContainer.style.display = 'block';
                 if (data.errors) {
-                    // Muestra por separado cada mensaje de validación devuelto por la API.
                     Object.values(data.errors).flat().forEach(msg => {
                         const li = document.createElement('li');
                         li.textContent = msg;
@@ -159,7 +165,29 @@
             li.textContent = 'Error de conexión con la API. ¿Está corriendo en el puerto 8001?';
             errorList.appendChild(li);
             console.error(err);
+        } finally {
+            submitButton.disabled = false;
         }
+    });
+
+    // Permite guardar la clave mostrada sin volver a solicitarla a la API.
+    document.getElementById('copy-password-btn').addEventListener('click', async () => {
+        const passwordField = document.getElementById('generated-password');
+        const feedback = document.getElementById('copy-feedback');
+
+        try {
+            await navigator.clipboard.writeText(passwordField.value);
+            feedback.textContent = 'Contraseña copiada.';
+        } catch (error) {
+            // Si el navegador bloquea el portapapeles, deja el texto seleccionado para copiarlo manualmente.
+            passwordField.select();
+            feedback.textContent = 'No se pudo copiar automáticamente. Copia el texto seleccionado.';
+        }
+    });
+
+    // El usuario continúa al perfil cuando ya haya guardado su contraseña.
+    document.getElementById('continue-btn').addEventListener('click', () => {
+        window.location.href = '/dashboard';
     });
     </script>
 
