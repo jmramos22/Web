@@ -76,7 +76,7 @@
             if (res.ok) {
                 // Login exitoso: guardar token y redirigir
                 localStorage.setItem('auth_token', data.token);
-                window.location.href = '/dashboard';
+                window.location.href = '/panel';
             } else {
                 // Mostrar errores de validación o credenciales incorrectas
                 errorContainer.style.display = 'block';

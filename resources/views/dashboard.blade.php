@@ -16,6 +16,7 @@
                 <h1>Tu espacio académico</h1>
                 <p class="dashboard-intro">Consulta tu perfil y mantén segura tu cuenta de Tutorías UAS.</p>
             </div>
+            <a class="logout-button dashboard-panel-link" href="/panel">Volver al panel</a>
             <button id="logout-btn" class="logout-button" type="button">Cerrar sesión</button>
         </header>
 
