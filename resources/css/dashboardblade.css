@@ -108,12 +108,13 @@ body {
 }
 
 .avatar-frame {
-    display: grid;
+    display: flex; /* Cambiado de grid a flex */
     flex: 0 0 104px;
     width: 104px;
     height: 104px;
     overflow: hidden;
-    place-items: center;
+    align-items: center; /* Centrado con flex */
+    justify-content: center; /* Centrado con flex */
     border: 4px solid rgba(255, 255, 255, 0.9);
     border-radius: 50%;
     background: linear-gradient(145deg, #dcecf6, #a8cbdd);
@@ -130,6 +131,8 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center; /* Asegura que la imagen se centre */
+    display: block; /* Previene comportamientos extraños del elemento inline */
 }
 
 .avatar-controls {

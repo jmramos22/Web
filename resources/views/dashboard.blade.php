@@ -103,7 +103,11 @@
     // =============================================
     // 2. Cargar datos del usuario desde la API
     // =============================================
-    // Solicita el perfil autenticado y actualiza los datos visibles en el panel.
+    const avatarInput = document.getElementById('avatar-input');
+    const avatarImage = document.getElementById('user-avatar');
+    const avatarFallback = document.getElementById('avatar-fallback');
+    const avatarMessage = document.getElementById('avatar-message');
+
     (async () => {
         try {
             const res = await fetch('http://127.0.0.1:8001/api/user', {
@@ -132,38 +136,36 @@
                 .map(name => name.trim().charAt(0))
                 .join('')
                 .toUpperCase();
-            document.getElementById('avatar-fallback').textContent = initials || 'E';
+            avatarFallback.textContent = initials || 'E';
 
-            // CONEXIÓN CON LA API: cuando el backend devuelva la ruta/URL del avatar
-            // (por ejemplo, user.avatar_url), asignarla aquí a user-avatar.src y
-            // ocultar avatar-fallback si la URL existe.
+            // CONEXIÓN CON LA API: Mostrar la imagen de MongoDB
+            if (user.image_url) {
+                avatarImage.src = user.image_url;
+                avatarImage.hidden = false;
+                avatarFallback.hidden = true;
+            }
         } catch (err) {
             console.error('Error al cargar usuario:', err);
             document.getElementById('user-nombre').textContent = 'Error al cargar datos';
         }
     })();
 
-    // Esta vista previa solo existe en el navegador y no persiste al recargar.
-    // CONEXIÓN CON LA API: al definir el endpoint de avatar, enviar el archivo
-    // seleccionado en FormData con el token de autenticación y mostrar aquí
-    // los mensajes de éxito/error devueltos por el backend.
-    const avatarInput = document.getElementById('avatar-input');
-    const avatarImage = document.getElementById('user-avatar');
-    const avatarFallback = document.getElementById('avatar-fallback');
-    const avatarMessage = document.getElementById('avatar-message');
-    let temporaryAvatarUrl = null;
-
-    avatarInput.addEventListener('change', () => {
+    // =============================================
+    // 3. Subir fotografía a Laravel + MongoDB
+    // =============================================
+    avatarInput.addEventListener('change', async () => {
         const file = avatarInput.files[0];
+        
+        // Limpiar estilos previos
         avatarMessage.classList.remove('error');
+        avatarMessage.classList.remove('success');
 
-        if (!file) {
-            return;
-        }
+        if (!file) return;
 
         const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        const maxSize = 5 * 1024 * 1024;
+        const maxSize = 5 * 1024 * 1024; // 5 MB
 
+        // Validaciones en cliente
         if (!allowedTypes.includes(file.type)) {
             avatarInput.value = '';
             avatarMessage.textContent = 'Elige una imagen JPG, PNG o WebP.';
@@ -178,18 +180,55 @@
             return;
         }
 
-        if (temporaryAvatarUrl) {
-            URL.revokeObjectURL(temporaryAvatarUrl);
-        }
-
-        temporaryAvatarUrl = URL.createObjectURL(file);
-        avatarImage.src = temporaryAvatarUrl;
+        // Vista previa inmediata (Feedback rápido para el usuario)
+        const temporaryUrl = URL.createObjectURL(file);
+        avatarImage.src = temporaryUrl;
         avatarImage.hidden = false;
         avatarFallback.hidden = true;
-        avatarMessage.textContent = 'Vista previa actualizada. Aún no se ha guardado en tu cuenta.';
+        avatarMessage.textContent = 'Subiendo fotografía...';
+
+        // Preparar datos para enviar (Multipart/form-data)
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const res = await fetch('http://127.0.0.1:8001/api/user/image', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                    // ATENCIÓN: No poner 'Content-Type'. Fetch lo calcula automáticamente con el Boundary para FormData.
+                },
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                const errors = data.errors ? Object.values(data.errors).flat().join(' ') : data.message;
+                throw new Error(errors || 'Error al subir la imagen.');
+            }
+
+            // Éxito
+            avatarMessage.textContent = data.message; // "Fotografía actualizada correctamente."
+            avatarMessage.classList.add('success');
+            
+            // Reemplazar la vista temporal por la URL real guardada en MongoDB
+            avatarImage.src = data.image_url;
+
+        } catch (error) {
+            avatarMessage.textContent = error.message;
+            avatarMessage.classList.add('error');
+            // Si falla, se queda la imagen temporal cargada, pero le avisa al usuario.
+        } finally {
+            // Liberar memoria del navegador
+            URL.revokeObjectURL(temporaryUrl);
+        }
     });
 
-    // Envía el cambio de contraseña usando el token de la sesión actual.
+    // =============================================
+    // 4. Actualizar Contraseña
+    // =============================================
     document.getElementById('password-form').addEventListener('submit', async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -228,9 +267,8 @@
     });
 
     // =============================================
-    // 3. Cerrar sesión (API + limpiar token)
+    // 5. Cerrar sesión
     // =============================================
-    // Invalida la sesión en la API, elimina el token local y vuelve al formulario de acceso.
     document.getElementById('logout-btn').addEventListener('click', async () => {
         try {
             await fetch('http://127.0.0.1:8001/api/logout', {
