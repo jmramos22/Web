@@ -24,6 +24,26 @@
             <section class="user-card" aria-labelledby="profile-title">
                 <p class="card-eyebrow">TU CUENTA</p>
                 <h2 id="profile-title">Información de perfil</h2>
+                <div class="avatar-section">
+                    <div class="avatar-frame">
+                        <span id="avatar-fallback" class="avatar-fallback" aria-hidden="true">E</span>
+                        <img id="user-avatar" class="user-avatar" alt="Fotografía de perfil" hidden>
+                    </div>
+                    <div class="avatar-controls">
+                        <label class="avatar-button" for="avatar-input">Elegir fotografía</label>
+                        <input
+                            id="avatar-input"
+                            class="avatar-input"
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            aria-describedby="avatar-help avatar-message"
+                        >
+                        <p id="avatar-help" class="avatar-help">JPG, PNG o WebP · máximo 5 MB</p>
+                        <p id="avatar-message" class="avatar-message" role="status" aria-live="polite">
+                            La vista previa es local; los cambios no se guardan todavía.
+                        </p>
+                    </div>
+                </div>
                 <div class="profile-details">
                     <div class="profile-detail">
                         <span class="detail-label">Nombre</span>
@@ -106,11 +126,68 @@
             document.getElementById('user-correo').textContent  = user.correo_institucional || '';
             document.getElementById('user-carrera').textContent = user.carrera || '';
             document.getElementById('user-rol').textContent     = user.rol || '';
+
+            const initials = [user.nombre, user.apellido]
+                .filter(Boolean)
+                .map(name => name.trim().charAt(0))
+                .join('')
+                .toUpperCase();
+            document.getElementById('avatar-fallback').textContent = initials || 'E';
+
+            // CONEXIÓN CON LA API: cuando el backend devuelva la ruta/URL del avatar
+            // (por ejemplo, user.avatar_url), asignarla aquí a user-avatar.src y
+            // ocultar avatar-fallback si la URL existe.
         } catch (err) {
             console.error('Error al cargar usuario:', err);
             document.getElementById('user-nombre').textContent = 'Error al cargar datos';
         }
     })();
+
+    // Esta vista previa solo existe en el navegador y no persiste al recargar.
+    // CONEXIÓN CON LA API: al definir el endpoint de avatar, enviar el archivo
+    // seleccionado en FormData con el token de autenticación y mostrar aquí
+    // los mensajes de éxito/error devueltos por el backend.
+    const avatarInput = document.getElementById('avatar-input');
+    const avatarImage = document.getElementById('user-avatar');
+    const avatarFallback = document.getElementById('avatar-fallback');
+    const avatarMessage = document.getElementById('avatar-message');
+    let temporaryAvatarUrl = null;
+
+    avatarInput.addEventListener('change', () => {
+        const file = avatarInput.files[0];
+        avatarMessage.classList.remove('error');
+
+        if (!file) {
+            return;
+        }
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        const maxSize = 5 * 1024 * 1024;
+
+        if (!allowedTypes.includes(file.type)) {
+            avatarInput.value = '';
+            avatarMessage.textContent = 'Elige una imagen JPG, PNG o WebP.';
+            avatarMessage.classList.add('error');
+            return;
+        }
+
+        if (file.size > maxSize) {
+            avatarInput.value = '';
+            avatarMessage.textContent = 'La imagen debe pesar 5 MB o menos.';
+            avatarMessage.classList.add('error');
+            return;
+        }
+
+        if (temporaryAvatarUrl) {
+            URL.revokeObjectURL(temporaryAvatarUrl);
+        }
+
+        temporaryAvatarUrl = URL.createObjectURL(file);
+        avatarImage.src = temporaryAvatarUrl;
+        avatarImage.hidden = false;
+        avatarFallback.hidden = true;
+        avatarMessage.textContent = 'Vista previa actualizada. Aún no se ha guardado en tu cuenta.';
+    });
 
     // Envía el cambio de contraseña usando el token de la sesión actual.
     document.getElementById('password-form').addEventListener('submit', async (event) => {
