@@ -22,3 +22,6 @@ Route::view('/register', 'auth.register')->name('register');
 
 // Vista del dashboard
 Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+// Panel exclusivo para estudiantes
+Route::view('/panel', 'panel-estudiante')->name('panel.estudiante');

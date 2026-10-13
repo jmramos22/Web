@@ -211,6 +211,12 @@ body {
     color: #fff;
 }
 
+.dashboard-panel-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
 .logout-button:hover {
     background: rgba(255, 255, 255, 0.22);
     transform: translateY(-1px);

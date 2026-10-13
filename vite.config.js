@@ -11,6 +11,7 @@ export default defineConfig({
                 'resources/css/loginblade.css',
                 'resources/css/registerblade.css',
                 'resources/css/dashboardblade.css',
+                'resources/css/panel-estudiante.css',
                 'resources/js/app.js',
             ],
             refresh: true,
