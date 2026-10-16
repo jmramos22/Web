@@ -5,94 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de estudiante - Tutorías UAS</title>
     @vite('resources/css/panel-estudiante.css')
+    @vite('resources/js/panel-estudianteblade.js')
 </head>
 <body>
     <p id="panel-status" class="panel-status" role="status">Verificando tu cuenta...</p>
 
     <section id="role-unavailable" class="access-message" aria-live="polite" hidden>
-        <h1>Este panel todavía no está disponible</h1>
-        <p>El panel actual es exclusivo para estudiantes. Estamos trabajando en los paneles de los demás roles.</p>
-        <a class="profile-link" href="/dashboard">Ir a mi perfil</a>
+        <h1>Este panel es exclusivo para estudiantes</h1>
+        <p>Tu cuenta no tiene acceso al panel de estudiante.</p>
+        <a class="profile-link" href="/dashboard">Volver a mi perfil</a>
     </section>
 
-    <main id="student-panel" class="panel-page" hidden>
+    <main
+        id="student-panel"
+        class="panel-page"
+        data-api-base-url="{{ rtrim((string) config('services.api.base_url'), '/') }}"
+        hidden
+    >
         <header class="panel-header">
-            <div>
-                <p class="panel-eyebrow">UNIVERSIDAD AUTÓNOMA DE SINALOA</p>
-                <h1>Panel de estudiante</h1>
-                <p>Encuentra apoyo académico y administra tus tutorías.</p>
-            </div>
-
-            <a class="profile-link" href="/dashboard" aria-label="Ir a mi perfil">
-                Mi perfil
+            <a class="student-brand" href="/panel" aria-label="Panel de estudiante UAS">
+                <span class="student-brand-mark" aria-hidden="true">E</span>
+                <span>
+                    <span class="panel-eyebrow">PANEL DE</span>
+                    <strong>Estudiante</strong>
+                </span>
+                <span class="student-brand-university">UAS</span>
             </a>
+            <div class="panel-header-actions">
+                <a class="profile-link" href="/dashboard">Mi perfil</a>
+                <button id="student-logout-button" class="student-logout-button" type="button">Cerrar sesión</button>
+            </div>
         </header>
 
-        <nav class="panel-nav" aria-label="Navegación del panel">
-            <a href="#resumen">Resumen</a>
-            <a href="#buscar-tutores">Buscar tutores</a>
-            <a href="#mis-tutorias">Mis tutorías</a>
-        </nav>
+        <div class="student-dashboard-layout">
+            <aside class="student-sidebar">
+                <p class="student-section-label">MI ESPACIO</p>
+                <nav aria-label="Navegación del panel de estudiante">
+                    <a class="student-nav-link is-active" href="#resumen">Resumen</a>
+                    <a class="student-nav-link" href="#buscar-tutores">Buscar tutor</a>
+                    <a class="student-nav-link" href="#mis-tutorias">Mis tutorías</a>
+                    <a class="student-nav-link" href="/dashboard">Mi perfil</a>
+                </nav>
+                <button id="student-logout-sidebar" class="student-nav-logout" type="button">Cerrar sesión</button>
+            </aside>
 
-        <section id="resumen" class="panel-section">
-            <h2>Resumen</h2>
-            <p>Desde aquí podrás encontrar tutores y dar seguimiento a tus solicitudes.</p>
-        </section>
+            <div class="student-dashboard-content">
+                <section id="resumen" class="student-welcome-card">
+                    <p class="student-section-label">BIENVENIDO<span id="student-name"></span></p>
+                    <h1>Encuentra apoyo académico</h1>
+                    <p>Busca acompañamiento en las materias que necesitas.</p>
 
-        <section id="buscar-tutores" class="panel-section">
-            <h2>Buscar tutores</h2>
-            <p>La búsqueda por materia y disponibilidad se conectará cuando esté lista la API.</p>
-        </section>
+                    <form id="tutor-search-form" class="student-search-form">
+                        <label class="visually-hidden" for="tutor-search">Buscar tutor por materia</label>
+                        <input
+                            id="tutor-search"
+                            type="search"
+                            placeholder="Buscar por materia..."
+                            disabled
+                            aria-describedby="tutor-search-note"
+                        >
+                        <button type="submit" disabled>Ver tutores</button>
+                    </form>
+                    <p id="tutor-search-note" class="student-feature-note">
+                        La búsqueda estará disponible cuando se implemente el catálogo de tutores en la API.
+                    </p>
+                </section>
 
-        <section id="mis-tutorias" class="panel-section">
-            <h2>Mis tutorías</h2>
-            <p>Aquí aparecerán tus solicitudes y sesiones.</p>
-        </section>
+                <section id="mis-tutorias" class="student-quick-actions" aria-labelledby="tutoring-actions-title">
+                    <p class="student-section-label">MIS TUTORÍAS</p>
+                    <h2 id="tutoring-actions-title">Da seguimiento a tu aprendizaje</h2>
+
+                    <a class="student-action-card" href="#buscar-tutores">
+                        <span class="student-action-icon" aria-hidden="true">+</span>
+                        <span>
+                            <strong>Solicitar una sesión</strong>
+                            <small>Elige materia, tutor y horario disponible cuando esta opción esté habilitada.</small>
+                        </span>
+                    </a>
+                    <a class="student-action-card" href="#solicitudes">
+                        <span class="student-action-icon student-action-icon-muted" aria-hidden="true">↗</span>
+                        <span>
+                            <strong>Revisar mis solicitudes</strong>
+                            <small>Consulta estados y cancelaciones cuando la API de tutorías esté disponible.</small>
+                        </span>
+                    </a>
+                    <a class="student-action-card" href="#calificaciones">
+                        <span class="student-action-icon student-action-icon-warm" aria-hidden="true">★</span>
+                        <span>
+                            <strong>Calificar una tutoría</strong>
+                            <small>Podrás evaluar una sesión después de que se complete.</small>
+                        </span>
+                    </a>
+                </section>
+
+                <section id="buscar-tutores" class="student-content-section">
+                    <div>
+                        <p class="student-section-label">ENCUENTRA APOYO</p>
+                        <h2>Buscar tutor</h2>
+                    </div>
+                    <p>La búsqueda de tutores por materia, calificación y disponibilidad aún no tiene un endpoint en la API.</p>
+                </section>
+
+                <section id="solicitudes" class="student-content-section">
+                    <div>
+                        <p class="student-section-label">SEGUIMIENTO</p>
+                        <h2>Mis solicitudes y sesiones</h2>
+                    </div>
+                    <p>Tus solicitudes y sesiones aparecerán aquí cuando se implemente su consulta en la API.</p>
+                </section>
+
+                <section id="calificaciones" class="student-content-section">
+                    <div>
+                        <p class="student-section-label">TU EXPERIENCIA</p>
+                        <h2>Calificaciones</h2>
+                    </div>
+                    <p>La calificación de tutorías se habilitará cuando existan endpoints para sesiones completadas y reseñas.</p>
+                </section>
+
+                <section class="student-profile-callout">
+                    <div>
+                        <p class="student-section-label">TU PERFIL</p>
+                        <h2>Mantén actualizada tu información</h2>
+                        <p>Consulta tu perfil y administra la fotografía y seguridad de tu cuenta.</p>
+                    </div>
+                    <a class="student-profile-cta" href="/dashboard">Ir a mi perfil</a>
+                </section>
+            </div>
+        </div>
     </main>
-
-    <script>
-        const token = localStorage.getItem('auth_token');
-        const panel = document.getElementById('student-panel');
-        const status = document.getElementById('panel-status');
-        const roleUnavailable = document.getElementById('role-unavailable');
-
-        if (!token) {
-            window.location.replace('/login');
-        } else {
-            (async () => {
-                try {
-                    const response = await fetch('http://127.0.0.1:8001/api/user', {
-                        headers: {
-                            'Accept': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    });
-
-                    if (response.status === 401) {
-                        localStorage.removeItem('auth_token');
-                        window.location.replace('/login');
-                        return;
-                    }
-
-                    if (!response.ok) {
-                        throw new Error(`No se pudo validar la cuenta (HTTP ${response.status}).`);
-                    }
-
-                    const user = await response.json();
-                    status.hidden = true;
-
-                    if (user.rol !== 'ESTUDIANTE') {
-                        roleUnavailable.hidden = false;
-                        return;
-                    }
-
-                    panel.hidden = false;
-                } catch (error) {
-                    console.error('Error al validar el rol del usuario:', error);
-                    status.textContent = 'No se pudo validar tu cuenta. Comprueba la conexión e inténtalo de nuevo.';
-                }
-            })();
-        }
-    </script>
 </body>
 </html>

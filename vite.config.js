@@ -7,12 +7,20 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                //Estilos
                 'resources/css/app.css',
                 'resources/css/loginblade.css',
                 'resources/css/registerblade.css',
                 'resources/css/dashboardblade.css',
                 'resources/css/panel-estudiante.css',
+                'resources/css/panel-tutor.css',
+                //Scripts
                 'resources/js/app.js',
+                'resources/js/loginblade.js',
+                'resources/js/registerblade.js',
+                'resources/js/dashboardblade.js',
+                'resources/js/panel-estudianteblade.js',
+                'resources/js/panel-tutor.js',
             ],
             refresh: true,
             fonts: [

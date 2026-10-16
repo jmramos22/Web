@@ -20,3 +20,5 @@ Route::view('/dashboard', 'dashboard')->name('dashboard');
 // Panel exclusivo para estudiantes
 Route::view('/panel', 'panel-estudiante')->name('panel.estudiante');
 
+// Panel exclusivo para tutores
+Route::view('/panel/tutor', 'panel-tutor')->name('panel.tutor');
