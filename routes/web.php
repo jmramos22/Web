@@ -22,3 +22,6 @@ Route::view('/panel', 'panel-estudiante')->name('panel.estudiante');
 
 // Panel exclusivo para tutores
 Route::view('/panel/tutor', 'panel-tutor')->name('panel.tutor');
+
+// Panel exclusivo para admin
+Route::view('/panel-admin', 'panel-admin');

@@ -14,6 +14,7 @@ export default defineConfig({
                 'resources/css/dashboardblade.css',
                 'resources/css/panel-estudiante.css',
                 'resources/css/panel-tutor.css',
+                'resources/css/panel-admin.css',
                 //Scripts
                 'resources/js/app.js',
                 'resources/js/loginblade.js',
@@ -21,6 +22,7 @@ export default defineConfig({
                 'resources/js/dashboardblade.js',
                 'resources/js/panel-estudianteblade.js',
                 'resources/js/panel-tutor.js',
+                'resources/js/panel-admin.js'
             ],
             refresh: true,
             fonts: [

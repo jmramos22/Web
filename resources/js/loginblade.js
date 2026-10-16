@@ -30,7 +30,16 @@ form.addEventListener('submit', async (e) => {
         if (res.ok) {
             // Login exitoso: guardar token y redirigir
             localStorage.setItem('auth_token', data.token);
-            window.location.href = data.user?.rol === 'TUTOR' ? '/panel/tutor' : '/panel';
+            const userRole = data.user?.rol;
+            
+            if (userRole === 'ADMIN') {
+                window.location.href = '/panel-admin';
+            } else if (userRole === 'TUTOR') {
+                window.location.href = '/panel/tutor';
+            } else {
+                window.location.href = '/panel'; // Por defecto, panel de estudiante
+            }
+            
         } else {
             // Mostrar errores de validación o credenciales incorrectas
             errorContainer.style.display = 'block';
