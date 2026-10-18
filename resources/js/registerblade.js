@@ -66,7 +66,7 @@ form.addEventListener('submit', async (e) => {
         });
 
         const data = await res.json();
-
+        // Manejar la respuesta de la API
         if (res.ok && !data.token) {
             errorContainer.style.display = 'block';
             const li = document.createElement('li');
@@ -85,12 +85,15 @@ form.addEventListener('submit', async (e) => {
                     li.textContent = msg;
                     errorList.appendChild(li);
                 });
+                
             } else {
+                // Mensaje de error genérico si no hay errores específicos.
                 const li = document.createElement('li');
                 li.textContent = data.message || 'Error al registrarse';
                 errorList.appendChild(li);
             }
         }
+        // Manejar errores de conexión con la API
     } catch (err) {
         // Error de conexión con la API
         errorContainer.style.display = 'block';
@@ -98,6 +101,7 @@ form.addEventListener('submit', async (e) => {
         li.textContent = 'No fue posible conectar con la API.';
         errorList.appendChild(li);
         console.error(err);
+        // Mostrar mensaje de error genérico si no hay errores específicos.
     } finally {
         submitButton.disabled = false;
     }

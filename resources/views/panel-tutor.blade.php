@@ -26,10 +26,7 @@
                 </span>
                 <span class="tutor-brand-university">UAS</span>
             </a>
-            <div class="tutor-header-actions">
-                <a class="tutor-profile-link" href="/dashboard">Mi perfil</a>
-                <button id="tutor-logout-button" class="tutor-logout-button" type="button">Cerrar sesión</button>
-            </div>
+            
         </header>
 
         <div class="tutor-dashboard-layout">
@@ -37,7 +34,7 @@
                 <p class="tutor-section-label">MI ESPACIO</p>
                 <nav aria-label="Navegación del panel de tutor">
                     <a class="tutor-nav-link is-active" href="#resumen">Resumen</a>
-                    <a class="tutor-nav-link" href="#perfil-tutor">Mi perfil tutor</a>
+                    <a class="tutor-nav-link" href="/dashboard">Mi perfil tutor</a>
                     <a class="tutor-nav-link" href="#disponibilidad">Disponibilidad</a>
                     <a class="tutor-nav-link" href="#solicitudes">Solicitudes</a>
                     <a class="tutor-nav-link" href="#sesiones">Mis sesiones</a>
@@ -57,7 +54,7 @@
                             <span>Horarios libres</span>
                         </article>
                         <article class="tutor-metric">
-                            <strong>—</strong>
+                            <strong id="tutor-open-requests-count">0</strong>
                             <span>Solicitudes</span>
                         </article>
                     </div>
@@ -76,14 +73,14 @@
                         <span class="tutor-action-icon tutor-action-icon-warm" aria-hidden="true">✓</span>
                         <span>
                             <strong>Atender solicitudes</strong>
-                            <small>Las solicitudes aparecerán aquí cuando esté disponible la API.</small>
+                            <small>Revisa las solicitudes y responde a tus estudiantes.</small>
                         </span>
                     </a>
                     <a class="tutor-action-card" href="#perfil-tutor">
                         <span class="tutor-action-icon tutor-action-icon-blue" aria-hidden="true">✎</span>
                         <span>
-                            <strong>Actualizar perfil y materias</strong>
-                            <small>Próximamente podrás editar tu biografía y materias.</small>
+                            <strong>Consultar mi carrera y materias</strong>
+                            <small>Revisa el plan de estudios de la carrera en la que estás registrado.</small>
                         </span>
                     </a>
                 </section>
@@ -93,7 +90,8 @@
                         <p class="tutor-section-label">TU OFERTA</p>
                         <h2>Mi perfil tutor</h2>
                     </div>
-                    <p>La gestión de biografía, materias y habilidades estará disponible cuando se implemente el API de perfil de tutor.</p>
+                    <p id="tutor-curriculum-status" class="tutor-inline-status" role="status" aria-live="polite">Cargando tu plan de estudios...</p>
+                    <div id="tutor-curriculum" class="tutor-curriculum"></div>
                 </section>
 
                 <section id="disponibilidad" class="tutor-content-section">
@@ -106,18 +104,20 @@
 
                 <section id="solicitudes" class="tutor-content-section">
                     <div>
-                        <p class="tutor-section-label">PENDIENTES</p>
+                        <p class="tutor-section-label">SOLICITUDES RECIBIDAS</p>
                         <h2>Solicitudes</h2>
                     </div>
-                    <p>Las solicitudes de tutoría se mostrarán aquí cuando esté implementado el API correspondiente.</p>
+                    <p id="tutor-requests-status" class="tutor-inline-status" role="status" aria-live="polite">Cargando solicitudes...</p>
+                    <div id="tutor-request-list" class="tutor-request-list"></div>
                 </section>
 
                 <section id="sesiones" class="tutor-content-section">
                     <div>
                         <p class="tutor-section-label">SEGUIMIENTO</p>
-                        <h2>Mis sesiones</h2>
+                        <h2>Sesiones confirmadas</h2>
                     </div>
-                    <p>Las sesiones aceptadas y completadas aparecerán aquí cuando se implemente su gestión en el API.</p>
+                    <p id="tutor-sessions-status" class="tutor-inline-status" role="status" aria-live="polite">Cargando sesiones...</p>
+                    <div id="tutor-session-list" class="tutor-request-list"></div>
                 </section>
             </div>
         </div>

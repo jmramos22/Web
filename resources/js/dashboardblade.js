@@ -18,6 +18,13 @@ const avatarFallback = document.getElementById('avatar-fallback');
 const avatarMessage = document.getElementById('avatar-message');
 const removeAvatarButton = document.getElementById('remove-avatar-btn');
 
+// Mantiene el avatar predeterminado visible si la imagen guardada no está disponible.
+avatarImage.addEventListener('error', () => {
+    avatarImage.hidden = true;
+    avatarFallback.hidden = false;
+});
+
+// Consulta el perfil autenticado y muestra los datos y la fotografía del usuario.
 (async () => {
     try {
         const res = await fetch(`${apiBaseUrl}/api/user`, {
@@ -41,14 +48,7 @@ const removeAvatarButton = document.getElementById('remove-avatar-btn');
         document.getElementById('user-carrera').textContent = user.carrera || '';
         document.getElementById('user-rol').textContent     = user.rol || '';
 
-        const initials = [user.nombre, user.apellido]
-            .filter(Boolean)
-            .map(name => name.trim().charAt(0))
-            .join('')
-            .toUpperCase();
-        avatarFallback.textContent = initials || 'E';
-
-        // CONEXIÓN CON LA API: Mostrar la imagen de MongoDB
+        // Muestra la fotografía guardada; si no existe, permanece visible el icono predeterminado.
         if (user.image_url) {
             avatarImage.src = user.image_url;
             avatarImage.hidden = false;
@@ -64,6 +64,7 @@ const removeAvatarButton = document.getElementById('remove-avatar-btn');
 // =============================================
 // 3. Subir fotografía a Laravel + MongoDB
 // =============================================
+// Valida la imagen seleccionada, muestra una vista previa y la sube a la API.
 avatarInput.addEventListener('change', async () => {
     const file = avatarInput.files[0];
     
@@ -138,7 +139,7 @@ avatarInput.addEventListener('change', async () => {
     }
 });
 
-//Eliminacion de la fotografia de perfil
+// Pide confirmación y elimina la fotografía tanto en la API como en la vista del perfil.
 removeAvatarButton.addEventListener('click', async () => {
     if (!window.confirm('¿Quieres eliminar tu fotografía de perfil?')) {
         return;
@@ -183,6 +184,7 @@ removeAvatarButton.addEventListener('click', async () => {
 // =============================================
 // 4. Actualizar Contraseña
 // =============================================
+// Envía la contraseña actual y la nueva; muestra el resultado y limpia el formulario al tener éxito.
 document.getElementById('password-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -223,6 +225,7 @@ document.getElementById('password-form').addEventListener('submit', async (event
 // =============================================
 // 5. Cerrar sesión
 // =============================================
+// Intenta cerrar la sesión en la API y siempre limpia el token antes de redirigir al acceso.
 document.getElementById('logout-btn').addEventListener('click', async () => {
     try {
         await fetch(`${apiBaseUrl}/api/logout`, {

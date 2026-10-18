@@ -329,6 +329,171 @@ a {
     margin: 0;
 }
 
+.tutor-inline-status {
+    color: #61738a;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.tutor-curriculum {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.tutor-offer-topics,
+.tutor-offered-subjects {
+    grid-column: 1 / -1;
+    padding: 15px;
+    border: 1px solid #dceeeB;
+    border-radius: 12px;
+    background: #f8fcfb;
+}
+
+.tutor-offer-topics h3,
+.tutor-offered-subjects h3 {
+    margin: 0 0 8px;
+    color: #087e83;
+    font-size: 0.95rem;
+}
+
+.tutor-offer-topics p,
+.tutor-offered-subjects p {
+    margin: 0;
+    color: #61738a;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+.tutor-offered-subjects ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tutor-offered-subjects li {
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #e9f4f2;
+    color: #40566d;
+    font-size: 0.86rem;
+}
+
+.tutor-semester {
+    padding: 15px;
+    border: 1px solid #dceeeB;
+    border-radius: 12px;
+    background: #f8fcfb;
+}
+
+.tutor-semester h3 {
+    margin: 0 0 10px;
+    color: #087e83;
+    font-size: 0.95rem;
+}
+
+.tutor-semester ul {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding-left: 18px;
+    color: #61738a;
+    font-size: 0.86rem;
+    line-height: 1.4;
+}
+
+.tutor-request-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.tutor-request-card {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid #dceeeB;
+    border-radius: 12px;
+    background: #f8fcfb;
+}
+
+.tutor-request-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.tutor-request-heading h3 {
+    margin: 0;
+    color: #173758;
+    font-size: 1rem;
+}
+
+.tutor-request-card p {
+    margin: 0;
+    color: #61738a;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.tutor-request-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tutor-request-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 750;
+}
+
+.tutor-request-card button {
+    justify-self: start;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: #087e83;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tutor-request-card .tutor-request-reject {
+    border: 1px solid #a32925;
+    background: transparent;
+    color: #8d211e;
+}
+
+.tutor-request-card .tutor-request-complete {
+    background: #176238;
+}
+
+.tutor-request-card button:hover {
+    filter: brightness(0.93);
+}
+
+.tutor-request-card button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.tutor-request-card button:focus-visible {
+    outline: 3px solid rgba(8, 126, 131, 0.3);
+    outline-offset: 2px;
+}
+
 .tutor-profile-link:focus-visible,
 .tutor-logout-button:focus-visible,
 .tutor-nav-link:focus-visible,

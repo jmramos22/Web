@@ -21,6 +21,8 @@ export default defineConfig({
                 'resources/js/registerblade.js',
                 'resources/js/dashboardblade.js',
                 'resources/js/panel-estudianteblade.js',
+                'resources/js/solicitar-sesion.js',
+                'resources/js/postularme-tutor.js',
                 'resources/js/panel-tutor.js',
                 'resources/js/panel-admin.js'
             ],

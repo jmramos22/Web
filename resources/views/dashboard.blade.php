@@ -16,8 +16,20 @@
                 <h1>Tu espacio académico</h1>
                 <p class="dashboard-intro">Consulta tu perfil y mantén segura tu cuenta de Tutorías UAS.</p>
             </div>
-            <a class="logout-button dashboard-panel-link" href="/panel">Volver al panel</a>
-            <button id="logout-btn" class="logout-button" type="button">Cerrar sesión</button>
+            <div class="dashboard-header-actions">
+                <a class="logout-button dashboard-panel-link" href="/panel">
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                        <path d="M10 5H5v14h5M13 16l4-4-4-4m4 4H9" />
+                    </svg>
+                    <span>Volver al panel</span>
+                </a>
+                <button id="logout-btn" class="logout-button" type="button">
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                        <path d="M10 5H5v14h5m4-4 4-3-4-3m4 3H9m8-8h3v16h-3" />
+                    </svg>
+                    <span>Cerrar sesión</span>
+                </button>
+            </div>
         </header>
 
         <div class="dashboard-grid">
@@ -26,21 +38,35 @@
                 <h2 id="profile-title">Información de perfil</h2>
                 <div class="avatar-section">
                     <div class="avatar-frame">
-                        <span id="avatar-fallback" class="avatar-fallback" aria-hidden="true">E</span>
+                        <span id="avatar-fallback" class="avatar-fallback" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" focusable="false">
+                                <path d="M24 24a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 4c-9.2 0-16 4.7-16 10.5V42h32v-3.5C40 32.7 33.2 28 24 28Z" />
+                            </svg>
+                        </span>
                         <img id="user-avatar" class="user-avatar" alt="Fotografía de perfil" hidden>
                     </div>
                     <div class="avatar-controls">
-                        <label class="avatar-button" for="avatar-input">Subir fotografía</label>
-                        <input
-                            id="avatar-input"
-                            class="avatar-input"
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            aria-describedby="avatar-help avatar-message"
-                        >
-                        <button id="remove-avatar-btn" class="avatar-remove-button" type="button" hidden>
-                            Eliminar fotografía
-                        </button>
+                        <div class="avatar-actions">
+                            <label class="avatar-button" for="avatar-input">
+                                <svg aria-hidden="true" viewBox="0 0 24 24">
+                                    <path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5" />
+                                </svg>
+                                <span>Subir fotografía</span>
+                            </label>
+                            <input
+                                id="avatar-input"
+                                class="avatar-input"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                aria-describedby="avatar-help avatar-message"
+                            >
+                            <button id="remove-avatar-btn" class="avatar-remove-button" type="button" hidden>
+                                <svg aria-hidden="true" viewBox="0 0 24 24">
+                                    <path d="M4 7h16m-10 4v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3" />
+                                </svg>
+                                <span>Eliminar fotografía</span>
+                            </button>
+                        </div>
                         <p id="avatar-help" class="avatar-help">JPG, PNG o WebP · máximo 5 MB</p>
                         <p id="avatar-message" class="avatar-message" role="status" aria-live="polite">
                             Puedes cambiar o eliminar tu fotografía cuando quieras.
@@ -87,7 +113,12 @@
                             <input type="password" id="new-password-confirmation" autocomplete="new-password" minlength="12" placeholder="Escríbela nuevamente" required>
                         </div>
                     </div>
-                    <button type="submit" class="update-button">Actualizar contraseña</button>
+                    <button type="submit" class="update-button">
+                        <svg aria-hidden="true" viewBox="0 0 24 24">
+                            <path d="M6 10h12v10H6zM9 10V7a3 3 0 0 1 6 0v3m-3 4v2" />
+                        </svg>
+                        <span>Actualizar contraseña</span>
+                    </button>
                 </form>
             </section>
         </div>
