@@ -12,10 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Punto de configuración para los middlewares globales y de rutas.
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Devuelve errores de API en JSON aunque la solicitud no lo solicite explícitamente.
         $exceptions->shouldRenderJsonWhen(
+            // Identifica las rutas API o solicitudes que esperan una respuesta JSON.
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();

@@ -1,0 +1,576 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f6fa;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Menú Lateral (Dorado/Mostaza) */
+.sidebar {
+    width: 280px;
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    background-color: #b38b36;
+    color: white;
+    padding: 25px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-radius: 0 0 20px 0;
+}
+
+.avatar {
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.user-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.role-title {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    text-transform: uppercase;
+}
+
+.role-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.logo-uas {
+    font-size: 0.8rem;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+/* Enlaces del Menú */
+.sidebar-menu {
+    padding: 30px 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: bold;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-menu ul {
+    list-style: none;
+    flex-grow: 1;
+}
+
+.sidebar-menu li {
+    margin-bottom: 5px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #475569;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.sidebar-menu a:hover {
+    background-color: #f1f5f9;
+}
+
+.sidebar-menu a.active {
+    background-color: #fdf8eb;
+    color: #b38b36;
+    font-weight: bold;
+}
+
+.sidebar-menu a.active .icon {
+    color: #b38b36;
+}
+
+.icon {
+    color: #cbd5e1;
+    font-size: 0.8rem;
+}
+
+.logout-item {
+    margin-top: auto;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 10px;
+}
+
+/* Área Principal */
+.main-content {
+    flex-grow: 1;
+    padding: 40px 60px;
+    overflow-y: auto;
+    background-color: #f4f6fa;
+}
+
+header {
+    margin-bottom: 30px;
+}
+
+header h2 {
+    font-size: 0.85rem;
+    color: #64748b;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #64748b;
+}
+
+/* Tarjetas y Formularios */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.add-card form {
+    display: flex;
+    gap: 15px;
+}
+
+.add-card input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.add-card input:focus {
+    border-color: #b38b36;
+}
+
+.career-editor {
+    display: grid !important;
+    gap: 12px;
+}
+
+.career-editor-heading h3 {
+    margin: 0 0 5px;
+    color: #1e293b;
+    font-size: 1.05rem;
+}
+
+.career-editor-heading p {
+    color: #64748b;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.career-name-field,
+.career-semester-editor-item label {
+    display: grid;
+    gap: 6px;
+    color: #334155;
+    font-size: 0.88rem;
+    font-weight: 650;
+}
+
+.career-editor > input,
+.career-semester-editor-item input,
+.career-semester-editor-item textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    color: #1e293b;
+    font: inherit;
+}
+
+.career-editor > input:focus,
+.career-semester-editor-item input:focus,
+.career-semester-editor-item textarea:focus {
+    border-color: #b38b36;
+    outline: 3px solid rgba(179, 139, 54, 0.15);
+}
+
+.career-plan-heading,
+.career-semester-editor-heading,
+.career-editor-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.career-plan-heading {
+    margin-top: 4px;
+    color: #1e293b;
+}
+
+.career-semester-editor {
+    display: grid;
+    gap: 12px;
+}
+
+.career-semester-editor-item {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+}
+
+.career-semester-editor-heading label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.career-semester-editor-heading input {
+    width: 90px;
+}
+
+.career-semester-editor-item textarea {
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.btn-secondary,
+.career-remove-semester,
+.career-edit-button {
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    padding: 8px 11px;
+    background: #fff;
+    color: #334155;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.career-remove-semester {
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.career-editor-actions {
+    justify-content: flex-start;
+}
+
+.career-editor-actions button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+.btn-primary {
+    background-color: #b38b36;
+    color: white;
+    border: none;
+    padding: 0 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #96742c;
+}
+
+/* Listas de Datos */
+.data-list {
+    list-style: none;
+}
+
+.data-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.data-list li:last-child {
+    border-bottom: none;
+}
+
+.admin-user-item {
+    gap: 16px;
+}
+
+.admin-user-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 9px;
+}
+
+.admin-user-controls select:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.user-status-active,
+.user-status-inactive {
+    display: inline-block;
+    width: fit-content;
+    margin-top: 3px;
+    font-size: 0.78rem !important;
+    font-weight: 650;
+}
+
+.user-status-active {
+    color: #166534 !important;
+}
+
+.user-status-inactive {
+    color: #991b1b !important;
+}
+
+.user-deactivate-button,
+.user-reactivate-button {
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 8px 11px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.user-deactivate-button {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.user-reactivate-button {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.user-deactivate-button:disabled,
+.user-reactivate-button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+.admin-inline-status {
+    margin: 0 0 12px;
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.career-catalog-item {
+    display: grid !important;
+    justify-content: stretch !important;
+    gap: 9px;
+}
+
+.career-catalog-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.tutor-application-item {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start !important;
+    gap: 16px;
+}
+
+.application-info {
+    min-width: 0;
+    display: grid;
+    gap: 5px;
+}
+
+.application-info p {
+    margin: 4px 0 0;
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.career-semester-row {
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.career-empty-plan {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.application-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.application-actions button {
+    border: 0;
+    border-radius: 7px;
+    padding: 8px 12px;
+    background: #174a80;
+    color: #fff;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.application-actions button[data-decision="RECHAZADA"] {
+    background: #8d211e;
+}
+
+.application-actions button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+.request-info-list {
+    min-width: 0;
+    display: grid;
+    gap: 4px;
+}
+
+.request-info-list strong {
+    color: #1e293b;
+    display: block;
+    font-size: 1rem;
+}
+
+.request-info-list span {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+.tutoring-status {
+    flex: 0 0 auto;
+}
+
+.status-pendiente {
+    background: #fff4d6;
+    color: #805c08;
+}
+
+.status-aceptada,
+.status-completada {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-rechazada,
+.status-cancelada {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.user-info-list strong {
+    color: #1e293b;
+    display: block;
+    font-size: 1.05rem;
+}
+
+.user-info-list span {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 700px) {
+    .tutor-application-item {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-user-item {
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    .admin-user-controls {
+        justify-content: flex-start;
+    }
+}
+
+.role-select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.role-select:focus {
+    border-color: #b38b36;
+}
+
+.carrera-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.status-active {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+}

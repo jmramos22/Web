@@ -8,12 +8,21 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Comprueba que la ruta principal responda correctamente.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_root_redirects_to_the_login_page(): void
     {
-        $response = $this->get('/');
+        $this->get('/')->assertRedirect('/login');
+    }
 
-        $response->assertStatus(200);
+    public function test_frontend_pages_are_available(): void
+    {
+        config(['services.api.base_url' => 'https://api.example.test/']);
+
+        foreach (['/login', '/register', '/dashboard', '/panel', '/panel/tutor'] as $path) {
+            $this->get($path)
+                ->assertOk()
+                ->assertSee('api.example.test', false);
+        }
     }
 }
