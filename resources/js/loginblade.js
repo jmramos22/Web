@@ -12,6 +12,7 @@ form.addEventListener('submit', async (e) => {
     errorContainer.style.display = 'none';
     errorList.innerHTML = '';
 
+    // Validar campos vacíos antes de enviar la solicitud
     try {
         const res = await fetch(`${apiBaseUrl}/api/login`, {
             method: 'POST',
@@ -25,8 +26,10 @@ form.addEventListener('submit', async (e) => {
             }),
         });
 
+        // Analizar la respuesta de la API
         const data = await res.json();
 
+        // Manejar la respuesta de la API
         if (res.ok) {
             // Login exitoso: guardar token y redirigir
             localStorage.setItem('auth_token', data.token);
@@ -40,6 +43,7 @@ form.addEventListener('submit', async (e) => {
                 window.location.href = '/panel'; // Por defecto, panel de estudiante
             }
             
+            // Limpiar el formulario después de un inicio de sesión exitoso
         } else {
             // Mostrar errores de validación o credenciales incorrectas
             errorContainer.style.display = 'block';

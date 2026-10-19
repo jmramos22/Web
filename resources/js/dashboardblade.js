@@ -116,6 +116,7 @@ avatarInput.addEventListener('change', async () => {
 
         const data = await res.json();
 
+        
         if (!res.ok) {
             const errors = data.errors ? Object.values(data.errors).flat().join(' ') : data.message;
             throw new Error(errors || 'Error al subir la imagen.');
