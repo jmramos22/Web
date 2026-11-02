@@ -31,7 +31,7 @@
             <a class="student-back-link" href="/panel">← Volver al panel</a>
             <p class="student-section-label">NUEVA SOLICITUD</p>
             <h1>Solicitar una sesión de tutoría</h1>
-            <p class="student-request-intro">Filtra las materias por semestre y elige un tutor y una fecha futura. La fecha es una propuesta; el tutor confirmará o rechazará la solicitud.</p>
+            <p class="student-request-intro">Filtra las materias por semestre, elige un tutor y selecciona uno de sus horarios libres (hora local de Mazatlán). El horario quedará reservado mientras el tutor responde a tu solicitud.</p>
 
             <form id="session-request-form" class="student-request-form">
                 <div class="student-request-fields">
@@ -48,16 +48,19 @@
                         </select>
                     </label>
                     <label>
-                        Fecha y hora solicitada
-                        <input id="session-date" name="fecha_hora" type="datetime-local" required>
-                    </label>
-                    <label>
                         Tutor
-                        <select id="session-tutor" name="tutor_id" required>
+                        <select id="session-tutor" required>
                             <option value="">Cargando tutores...</option>
                         </select>
                     </label>
+                    <label>
+                        Horario disponible
+                        <select id="session-availability" name="disponibilidad_id" required disabled>
+                            <option value="">Primero selecciona un tutor</option>
+                        </select>
+                    </label>
                 </div>
+                <p id="session-availability-status" class="student-inline-status" role="status" aria-live="polite" hidden></p>
                 <label class="student-request-message">
                     Mensaje para el tutor <span>(opcional)</span>
                     <textarea name="mensaje" rows="4" maxlength="1000" placeholder="Cuéntale brevemente qué tema necesitas repasar."></textarea>

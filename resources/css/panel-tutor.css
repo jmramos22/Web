@@ -335,6 +335,105 @@ a {
     line-height: 1.5;
 }
 
+.tutor-availability-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    align-items: end;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.tutor-availability-form label {
+    display: grid;
+    gap: 7px;
+    color: #40566d;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.tutor-availability-form input {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 11px;
+    border: 1px solid #d5e0e9;
+    border-radius: 9px;
+    background: #fff;
+    color: #173758;
+    font: inherit;
+}
+
+.tutor-availability-form input:focus-visible {
+    border-color: #087e83;
+    outline: 3px solid rgba(8, 126, 131, 0.14);
+}
+
+.tutor-availability-form button,
+.tutor-availability-delete {
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 9px;
+    background: #087e83;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tutor-availability-form button:disabled,
+.tutor-availability-delete:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.tutor-availability-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.tutor-availability-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px;
+    border: 1px solid #dceeeB;
+    border-radius: 11px;
+    background: #f8fcfb;
+}
+
+.tutor-availability-card strong {
+    color: #173758;
+    font-size: 0.9rem;
+}
+
+.tutor-availability-free,
+.tutor-availability-booked {
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 750;
+}
+
+.tutor-availability-free {
+    background: #e0f2e8;
+    color: #176238;
+}
+
+.tutor-availability-booked {
+    background: #fbf0dc;
+    color: #8a641c;
+}
+
+.tutor-availability-delete {
+    min-height: 34px;
+    padding: 7px 11px;
+    border: 1px solid #a32925;
+    background: transparent;
+    color: #8d211e;
+    font-size: 0.8rem;
+}
+
 .tutor-curriculum {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -535,6 +634,19 @@ a {
 
     .tutor-sidebar nav {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tutor-availability-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tutor-availability-card {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .tutor-availability-delete {
+        grid-column: 1 / -1;
+        justify-self: start;
     }
 }
 

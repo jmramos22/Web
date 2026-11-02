@@ -13,9 +13,8 @@ const formStatus = document.getElementById('session-form-status');
 const semesterSelect = document.getElementById('session-semester');
 const subjectSelect = document.getElementById('session-subject');
 const tutorSelect = document.getElementById('session-tutor');
-
-// Campo de entrada de fecha y boton de envio del formulario
-const dateInput = document.getElementById('session-date');
+const availabilitySelect = document.getElementById('session-availability');
+const availabilityStatus = document.getElementById('session-availability-status');
 const submitButton = document.getElementById('session-submit');
 
 // URL bas de la API obtenida desde lo atributos data- del contenedor principal
@@ -23,6 +22,20 @@ const apiBaseUrl = page.dataset.apiBaseUrl;
 
 // Variable global oara almacenar el listado de materias disponibles
 let availableSubjects = [];
+
+function formatAvailabilityRange(start, end) {
+    const dateFormatter = new Intl.DateTimeFormat('es-MX', {
+        dateStyle: 'medium',
+        timeZone: 'America/Mazatlan',
+    });
+    const timeFormatter = new Intl.DateTimeFormat('es-MX', {
+        timeStyle: 'short',
+        timeZone: 'America/Mazatlan',
+    });
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return `${dateFormatter.format(startDate)}, ${timeFormatter.format(startDate)}–${timeFormatter.format(endDate)}`;
+}
 
 // Filtra y actualiza el desplegable de materias segun el semestre seleccionado
 function filterSubjectsBySemester() {
@@ -141,6 +154,10 @@ async function loadSessionOptions() {
         // Reiniciar los selectores desplegables con su opcion por efecto
         semesterSelect.replaceChildren(new Option('Selecciona un semestre', ''));
         tutorSelect.replaceChildren(new Option('Selecciona un tutor', ''));
+        availabilitySelect.replaceChildren(new Option('Primero selecciona un tutor', ''));
+        availabilitySelect.disabled = true;
+        availabilityStatus.hidden = true;
+        submitButton.disabled = true;
 
         // Extraer los semestres unicos disponibles a partir del listado de materias
         const semesters = [...new Set(availableSubjects.map((subject) => subject.semestre))];
@@ -168,18 +185,13 @@ async function loadSessionOptions() {
             formStatus.hidden = false;
             formStatus.textContent = !availableSubjects.length
                 ? 'No hay materias registradas para la carrera de tu perfil. Verifica tu carrera o contacta al administrador.'
-                : 'No hay tutores disponibles para la carrera de tu perfil.';
+                : 'No hay tutores con horarios publicados disponibles para la carrera de tu perfil.';
             return;
         }
 
-        // Confugurar la fecha/hora minima permitida en el campo de entrada (Fecha actual local)
-        const localNow = new Date();
-        localNow.setMinutes(localNow.getMinutes() - localNow.getTimezoneOffset());
-        dateInput.min = localNow.toISOString().slice(0, 16);
-
         // Ocultar mensajes de estado y habilitar el boton de envio
         formStatus.hidden = true;
-        submitButton.disabled = false;
+        submitButton.disabled = true;
 
         // Capturar errores durante la carga de opciones y deshabilitar los controles del formulario
     } catch (error) {
@@ -195,8 +207,51 @@ async function loadSessionOptions() {
     }
 }
 
+async function loadTutorAvailability() {
+    availabilitySelect.replaceChildren(new Option('Cargando horarios...', ''));
+    availabilitySelect.disabled = true;
+    availabilityStatus.hidden = true;
+    submitButton.disabled = true;
+
+    if (!tutorSelect.value) {
+        availabilitySelect.replaceChildren(new Option('Primero selecciona un tutor', ''));
+        return;
+    }
+
+    try {
+        const data = await sessionApiRequest(`/api/tutoring/tutors/${tutorSelect.value}/availability`);
+        if (!Array.isArray(data.disponibilidades)) {
+            throw new Error('La API respondió sin la lista de horarios disponibles esperada.');
+        }
+
+        availabilitySelect.replaceChildren(new Option('Selecciona un horario disponible', ''));
+        data.disponibilidades.forEach((slot) => {
+            availabilitySelect.add(new Option(
+                formatAvailabilityRange(slot.inicio, slot.fin),
+                slot.id,
+            ));
+        });
+        availabilitySelect.disabled = data.disponibilidades.length === 0;
+        submitButton.disabled = true;
+
+        if (!data.disponibilidades.length) {
+            availabilityStatus.hidden = false;
+            availabilityStatus.textContent = 'Este tutor no tiene horarios libres. Elige otro tutor o inténtalo más tarde.';
+        }
+    } catch (error) {
+        availabilitySelect.replaceChildren(new Option('No se pudieron cargar los horarios', ''));
+        availabilityStatus.hidden = false;
+        availabilityStatus.textContent = error.message;
+        submitButton.disabled = true;
+    }
+}
+
 // Escuchar cambios en el selector de semestre para filtrar las materias dinamicamente 
 semesterSelect.addEventListener('change', filterSubjectsBySemester);
+tutorSelect.addEventListener('change', loadTutorAvailability);
+availabilitySelect.addEventListener('change', () => {
+    submitButton.disabled = !availabilitySelect.value;
+});
 
 // Escuchar el evento de envio (submit) del formulario
 form.addEventListener('submit', async (event) => {
@@ -218,10 +273,9 @@ form.addEventListener('submit', async (event) => {
             body: JSON.stringify(payload),
         });
 
-        // Limpiar los campos del formulario y reiniciar el filtro de materias
+        // Limpiar los campos y actualizar la lista de horarios disponibles.
         form.reset();
-        semesterSelect.value = '';
-        filterSubjectsBySemester();
+        await loadSessionOptions();
 
         // Mostrar mensaje de exito enviado por la API
         formStatus.textContent = `${result.message} Puedes revisar el estado en tus solicitudes.`;
@@ -238,7 +292,7 @@ form.addEventListener('submit', async (event) => {
 
         // Volver a habilitar el boton de envio sin importar si la peticion fallo o fue exitosa
     } finally {
-        submitButton.disabled = false;
+        submitButton.disabled = !availabilitySelect.value;
     }
 });
 

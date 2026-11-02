@@ -22,6 +22,20 @@ const requestStatusLabels = {
     COMPLETADA: 'Completada',
 };
 
+function formatAvailabilityRange(start, end) {
+    const dateFormatter = new Intl.DateTimeFormat('es-MX', {
+        dateStyle: 'medium',
+        timeZone: 'America/Mazatlan',
+    });
+    const timeFormatter = new Intl.DateTimeFormat('es-MX', {
+        timeStyle: 'short',
+        timeZone: 'America/Mazatlan',
+    });
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return `${dateFormatter.format(startDate)}, ${timeFormatter.format(startDate)}–${timeFormatter.format(endDate)}`;
+}
+
 /**
  * Envía solicitudes autenticadas y convierte respuestas HTTP fallidas en errores visibles.
  */
@@ -86,10 +100,13 @@ function createStudentRequestCard(request) {
 
     // Crea un elemento de párrafo para mostrar la fecha y hora de la solicitud, formateada según la configuración regional.
     const date = document.createElement('p');
-    date.textContent = `Fecha solicitada: ${new Intl.DateTimeFormat('es-MX', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    }).format(new Date(request.fecha_hora))}`;
+    date.textContent = `Fecha solicitada: ${request.disponibilidad
+        ? formatAvailabilityRange(request.disponibilidad.inicio, request.disponibilidad.fin)
+        : new Intl.DateTimeFormat('es-MX', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+            timeZone: 'America/Mazatlan',
+        }).format(new Date(request.fecha_hora))}`;
 
     // Agrega los elementos de encabezado, tutor y fecha a la tarjeta de solicitud del estudiante.
     card.append(heading, tutor, date);
