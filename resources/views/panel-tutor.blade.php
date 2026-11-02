@@ -50,7 +50,7 @@
 
                     <div class="tutor-metrics" aria-label="Resumen de actividad">
                         <article class="tutor-metric">
-                            <strong>—</strong>
+                            <strong id="tutor-free-slots-count">0</strong>
                             <span>Horarios libres</span>
                         </article>
                         <article class="tutor-metric">
@@ -66,7 +66,7 @@
                         <span class="tutor-action-icon" aria-hidden="true">+</span>
                         <span>
                             <strong>Publicar disponibilidad</strong>
-                            <small>Próximamente podrás crear bloques para tus tutorías.</small>
+                            <small>Publica los días y horarios en los que puedes atender tutorías.</small>
                         </span>
                     </a>
                     <a class="tutor-action-card" href="#solicitudes">
@@ -99,7 +99,20 @@
                         <p class="tutor-section-label">HORARIOS</p>
                         <h2>Disponibilidad</h2>
                     </div>
-                    <p>Aún no hay horarios para mostrar. La publicación y consulta de disponibilidad requiere endpoints que todavía no están implementados.</p>
+                    <p class="tutor-section-description">Publica bloques futuros en hora local de Mazatlán indicando cuándo comienzan y terminan. Los bloques con solicitudes pendientes o sesiones aceptadas dejan de aparecer como libres.</p>
+                    <form id="tutor-availability-form" class="tutor-availability-form">
+                        <label>
+                            Inicio
+                            <input id="availability-start" name="inicio" type="datetime-local" required>
+                        </label>
+                        <label>
+                            Fin
+                            <input id="availability-end" name="fin" type="datetime-local" required>
+                        </label>
+                        <button id="availability-submit" type="submit">Publicar horario</button>
+                    </form>
+                    <p id="tutor-availability-status" class="tutor-inline-status" role="status" aria-live="polite">Cargando tus horarios...</p>
+                    <div id="tutor-availability-list" class="tutor-availability-list"></div>
                 </section>
 
                 <section id="solicitudes" class="tutor-content-section">

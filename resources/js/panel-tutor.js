@@ -9,8 +9,15 @@ const tutorRequestsStatus = document.getElementById('tutor-requests-status');
 const tutorSessionList = document.getElementById('tutor-session-list');
 const tutorSessionsStatus = document.getElementById('tutor-sessions-status');
 const openRequestsCount = document.getElementById('tutor-open-requests-count');
+const freeSlotsCount = document.getElementById('tutor-free-slots-count');
 const tutorCurriculum = document.getElementById('tutor-curriculum');
 const tutorCurriculumStatus = document.getElementById('tutor-curriculum-status');
+const availabilityForm = document.getElementById('tutor-availability-form');
+const availabilityStart = document.getElementById('availability-start');
+const availabilityEnd = document.getElementById('availability-end');
+const availabilitySubmit = document.getElementById('availability-submit');
+const availabilityStatus = document.getElementById('tutor-availability-status');
+const availabilityList = document.getElementById('tutor-availability-list');
 
 // Define los estados de las solicitudes y sus etiquetas legibles para el usuario.
 const requestStatusLabels = {
@@ -20,6 +27,161 @@ const requestStatusLabels = {
     CANCELADA: 'Cancelada',
     COMPLETADA: 'Completada',
 };
+
+function formatAvailabilityRange(start, end) {
+    const dateFormatter = new Intl.DateTimeFormat('es-MX', {
+        dateStyle: 'medium',
+        timeZone: 'America/Mazatlan',
+    });
+    const timeFormatter = new Intl.DateTimeFormat('es-MX', {
+        timeStyle: 'short',
+        timeZone: 'America/Mazatlan',
+    });
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return `${dateFormatter.format(startDate)}, ${timeFormatter.format(startDate)}–${timeFormatter.format(endDate)}`;
+}
+
+function localDateTimeValue(date) {
+    return new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'America/Mazatlan',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+    }).format(date).replace(' ', 'T');
+}
+
+async function availabilityApiRequest(path, options = {}) {
+    const response = await fetch(`${apiBaseUrl}${path}`, {
+        ...options,
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+            ...options.headers,
+        },
+    });
+    const data = await response.json();
+
+    if (response.status === 401) {
+        localStorage.removeItem('auth_token');
+        window.location.replace('/login');
+        throw new Error('Tu sesión expiró. Inicia sesión nuevamente.');
+    }
+
+    if (!response.ok) {
+        const validationMessage = data.errors
+            ? Object.values(data.errors).flat().join(' ')
+            : '';
+        throw new Error(validationMessage || data.message || 'No se pudo completar la operación de disponibilidad.');
+    }
+
+    return data;
+}
+
+async function loadTutorAvailability() {
+    availabilityStatus.textContent = 'Cargando tus horarios...';
+    availabilityStatus.hidden = false;
+    availabilityList.replaceChildren();
+
+    try {
+        const data = await availabilityApiRequest('/api/tutoring/availability');
+        if (!Array.isArray(data.disponibilidades)) {
+            throw new Error('La API respondió sin la lista de horarios esperada.');
+        }
+
+        freeSlotsCount.textContent = String(data.horarios_libres);
+        if (!data.disponibilidades.length) {
+            availabilityStatus.textContent = 'Aún no has publicado horarios futuros.';
+            return;
+        }
+
+        availabilityStatus.hidden = true;
+        data.disponibilidades.forEach((slot) => {
+            const card = document.createElement('article');
+            card.className = 'tutor-availability-card';
+
+            const range = document.createElement('strong');
+            range.textContent = formatAvailabilityRange(slot.inicio, slot.fin);
+            const slotStatus = document.createElement('span');
+            slotStatus.className = slot.libre ? 'tutor-availability-free' : 'tutor-availability-booked';
+            slotStatus.textContent = slot.libre ? 'Libre' : 'Reservado';
+            card.append(range, slotStatus);
+
+            if (slot.libre) {
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'tutor-availability-delete';
+                deleteButton.dataset.availabilityId = slot.id;
+                deleteButton.textContent = 'Eliminar';
+                card.appendChild(deleteButton);
+            }
+
+            availabilityList.appendChild(card);
+        });
+    } catch (error) {
+        availabilityStatus.textContent = error.message;
+    }
+}
+
+availabilityStart.min = localDateTimeValue(new Date());
+availabilityEnd.min = availabilityStart.min;
+availabilityStart.addEventListener('change', () => {
+    availabilityEnd.min = availabilityStart.value;
+});
+
+availabilityForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    availabilitySubmit.disabled = true;
+    availabilityStatus.hidden = false;
+    availabilityStatus.textContent = 'Publicando horario...';
+
+    try {
+        const data = await availabilityApiRequest('/api/tutoring/availability', {
+            method: 'POST',
+            body: JSON.stringify({
+                inicio: availabilityStart.value,
+                fin: availabilityEnd.value,
+            }),
+        });
+        availabilityForm.reset();
+        availabilityStart.min = localDateTimeValue(new Date());
+        availabilityEnd.min = availabilityStart.min;
+        availabilityStatus.textContent = data.message;
+        await loadTutorAvailability();
+        availabilityStatus.hidden = false;
+        availabilityStatus.textContent = data.message;
+    } catch (error) {
+        availabilityStatus.textContent = error.message;
+    } finally {
+        availabilitySubmit.disabled = false;
+    }
+});
+
+availabilityList.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-availability-id]');
+    if (!button) {
+        return;
+    }
+
+    button.disabled = true;
+    try {
+        const data = await availabilityApiRequest(
+            `/api/tutoring/availability/${button.dataset.availabilityId}`,
+            { method: 'DELETE' },
+        );
+        await loadTutorAvailability();
+        availabilityStatus.hidden = false;
+        availabilityStatus.textContent = data.message;
+    } catch (error) {
+        availabilityStatus.hidden = false;
+        availabilityStatus.textContent = error.message;
+        button.disabled = false;
+    }
+});
 
 /**
  * Crea una tarjeta con la información que el tutor necesita para responder.
@@ -49,10 +211,13 @@ function createTutorRequestCard(request) {
 
     // Muestra la fecha solicitada en un formato legible para el usuario, utilizando la configuración regional de México.
     const date = document.createElement('p');
-    date.textContent = `Fecha solicitada: ${new Intl.DateTimeFormat('es-MX', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    }).format(new Date(request.fecha_hora))}`;
+    date.textContent = `Fecha solicitada: ${request.disponibilidad
+        ? formatAvailabilityRange(request.disponibilidad.inicio, request.disponibilidad.fin)
+        : new Intl.DateTimeFormat('es-MX', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+            timeZone: 'America/Mazatlan',
+        }).format(new Date(request.fecha_hora))}`;
 
     // Agrega los elementos de encabezado, estudiante y fecha a la tarjeta, proporcionando una vista completa de la solicitud para que el tutor pueda revisarla y tomar decisiones.
     card.append(heading, student, date);
@@ -335,7 +500,7 @@ async function updateTutorRequest(requestId, nextStatus, actionButton) {
         }
 
         // Vuelve a cargar la lista de solicitudes y sesiones del tutor después de actualizar el estado de la solicitud, proporcionando una vista actualizada de las solicitudes y sesiones del tutor.
-        await loadTutorRequests();
+        await Promise.all([loadTutorRequests(), loadTutorAvailability()]);
         // Muestra un mensaje de éxito al tutor después de actualizar el estado de la solicitud, proporcionando retroalimentación positiva sobre la acción realizada.
     } catch (error) {
         tutorRequestsStatus.hidden = false;
@@ -408,7 +573,7 @@ if (!token) {
             document.getElementById('tutor-name').textContent = user.nombre ? `, ${user.nombre}` : '';
             status.hidden = true;
             panel.hidden = false;
-            await Promise.all([loadTutorRequests(), loadTutorCurriculum()]);
+            await Promise.all([loadTutorRequests(), loadTutorCurriculum(), loadTutorAvailability()]);
             // Muestra un mensaje de estado indicando que las solicitudes y el currículum se han cargado correctamente, ocultando cualquier mensaje de error previo.
         } catch (error) {
             console.error('Error al validar el rol del tutor:', error);
