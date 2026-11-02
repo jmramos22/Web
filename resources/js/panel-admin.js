@@ -25,6 +25,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const careerSubmit = document.getElementById('career-submit');
     const careerCancelEdit = document.getElementById('career-cancel-edit');
     const careerEditorStatus = document.getElementById('career-editor-status');
+    const emptySemestersHint = document.getElementById('career-empty-semesters');
+    const careerFormCard = document.getElementById('career-form-card');
+    const careerListCard = document.getElementById('career-list-card');
+    const showCareerFormButton = document.getElementById('show-career-form');
+    const showCareerListButton = document.getElementById('show-career-list');
 
     // --- LÓGICA DE PESTAÑAS (MENÚ LATERAL) ---
     const navUsuarios = document.getElementById('nav-usuarios');
@@ -89,7 +94,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         removeButton.type = 'button';
         removeButton.className = 'career-remove-semester';
         removeButton.textContent = 'Quitar semestre';
-        removeButton.addEventListener('click', () => item.remove());
+        removeButton.addEventListener('click', () => {
+            item.remove();
+            emptySemestersHint.hidden = semesterEditor.children.length > 0;
+        });
         heading.append(numberLabel, removeButton);
 
         // Crea el área de texto para las materias del semestre.
@@ -104,6 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         subjectsLabel.appendChild(subjectsInput);
         item.append(heading, subjectsLabel);
         semesterEditor.appendChild(item);
+        emptySemestersHint.hidden = true;
     }
 
     // =============================================
@@ -113,23 +122,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         careerForm.reset();
         careerForm.dataset.careerId = '';
         semesterEditor.replaceChildren();
+        emptySemestersHint.hidden = false;
         careerEditorTitle.textContent = 'Agregar carrera y plan de estudios';
         careerSubmit.textContent = '+ Agregar carrera';
         careerCancelEdit.hidden = true;
         careerEditorStatus.hidden = true;
     }
 
+    
+    function openCareerForm() {
+        resetCareerEditor();
+        careerCancelEdit.hidden = false;
+        careerCancelEdit.textContent = 'Cancelar';
+        careerListCard.hidden = true;
+        careerFormCard.hidden = false;
+        careerFormCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        careerNameInput.focus({ preventScroll: true });
+    }
+
+    showCareerFormButton.addEventListener('click', openCareerForm);
+    showCareerListButton.addEventListener('click', async () => {
+        careerFormCard.hidden = true;
+        careerListCard.hidden = false;
+        await loadCarreras();
+        careerListCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    careerCancelEdit.addEventListener('click', () => {
+        resetCareerEditor();
+        careerFormCard.hidden = true;
+    });
+
     // =============================================
     // 3. Carga los datos de una carrera en el formulario para su edición.
     // =============================================
     function editCareer(career) {
         careerForm.dataset.careerId = career.id;
+        careerListCard.hidden = true;
+        careerFormCard.hidden = false;
         careerNameInput.value = career.nombre;
         semesterEditor.replaceChildren();
+        emptySemestersHint.hidden = career.semestres.length > 0;
         career.semestres.forEach((semester) => addSemesterEditor(semester));
         careerEditorTitle.textContent = `Editar carrera y plan de estudios`;
         careerSubmit.textContent = 'Guardar cambios';
         careerCancelEdit.hidden = false;
+        careerCancelEdit.textContent = 'Cancelar edición';
         careerEditorStatus.hidden = true;
         careerForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
         careerNameInput.focus({ preventScroll: true });
@@ -158,7 +196,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Conecta los botones de agregar semestre y cancelar edición con sus funciones correspondientes.
     document.getElementById('add-semester').addEventListener('click', () => addSemesterEditor());
-    careerCancelEdit.addEventListener('click', resetCareerEditor);
 
     // Obtiene las carreras de la API y actualiza la lista del catálogo.
     async function loadCarreras() {
@@ -180,6 +217,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const list = document.getElementById('lista-carreras');
             list.replaceChildren();
 
+            if (carreras.length === 0) {
+                careerStatus.hidden = false;
+                careerStatus.textContent = 'Aún no hay carreras registradas. Usa “Agregar carrera” para crear la primera.';
+                return;
+            }
+
             // Genera cada elemento de carrera con su información y controles de edición.
             carreras.forEach((career) => {
                 const item = document.createElement('li');
@@ -193,16 +236,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const name = document.createElement('strong');
                 name.textContent = career.nombre;
                 const status = document.createElement('span');
+                status.className = career.activa ? 'career-status-active' : 'career-status-inactive';
                 status.textContent = career.activa ? 'Activa' : 'Inactiva';
                 info.append(name, status);
 
-                // Crea el botón de edición que carga la carrera en el formulario para su modificación.
+                const actions = document.createElement('div');
+                actions.className = 'career-catalog-actions';
                 const editButton = document.createElement('button');
                 editButton.type = 'button';
                 editButton.className = 'career-edit-button';
                 editButton.textContent = 'Editar plan de estudios';
                 editButton.addEventListener('click', () => editCareer(career));
-                heading.append(info, editButton);
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'career-delete-button';
+                deleteButton.textContent = 'Eliminar carrera';
+                deleteButton.addEventListener('click', () => deleteCareer(career));
+                actions.append(editButton, deleteButton);
+                heading.append(info, actions);
                 item.appendChild(heading);
 
                 // Muestra el plan de estudios de la carrera, listando cada semestre y sus materias.
@@ -211,8 +262,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                     semesterRow.className = 'career-semester-row';
                     const semesterName = document.createElement('strong');
                     semesterName.textContent = `Semestre ${semester.numero}: `;
-                    const subjects = document.createElement('span');
-                    subjects.textContent = semester.materias.map((subject) => subject.nombre).join(' · ');
+                    const subjects = document.createElement('div');
+                    subjects.className = 'career-subject-list';
+                    semester.materias.forEach((subject) => {
+                        const subjectRow = document.createElement('div');
+                        subjectRow.className = 'career-subject-row';
+                        const subjectName = document.createElement('span');
+                        subjectName.textContent = subject.nombre;
+                        const subjectStatus = document.createElement('span');
+                        subjectStatus.className = subject.activa ? 'career-subject-active' : 'career-subject-inactive';
+                        subjectStatus.textContent = subject.activa ? 'Activa' : 'Inactiva';
+                        const statusButton = document.createElement('button');
+                        statusButton.type = 'button';
+                        statusButton.className = 'career-subject-status-button';
+                        statusButton.textContent = subject.activa ? 'Desactivar' : 'Activar';
+                        statusButton.addEventListener('click', () => updateMateriaStatus(subject.id, !subject.activa));
+                        subjectRow.append(subjectName, subjectStatus, statusButton);
+                        subjects.appendChild(subjectRow);
+                    });
                     semesterRow.append(semesterName, subjects);
                     item.appendChild(semesterRow);
                 });
@@ -228,6 +295,75 @@ document.addEventListener('DOMContentLoaded', async () => {
                 list.appendChild(item);
             });
             careerStatus.hidden = true;
+        } catch (error) {
+            careerStatus.hidden = false;
+            careerStatus.textContent = error.message;
+        }
+    }
+
+    
+    async function deleteCareer(career) {
+        const careerStatus = document.getElementById('admin-careers-status');
+        const confirmed = window.confirm(
+            `¿Eliminar la carrera "${career.nombre}" y su plan de estudios? Esta acción no se puede deshacer. Las carreras con usuarios o postulaciones vinculadas no se pueden eliminar.`,
+        );
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${apiBaseUrl}/api/admin/carreras/${career.id}`, {
+                method: 'DELETE',
+                headers,
+            });
+            const result = await response.json();
+
+            if (response.status === 401) {
+                localStorage.removeItem('auth_token');
+                window.location.replace('/login');
+                return;
+            }
+            if (!response.ok) {
+                throw new Error(result.message || 'No se pudo eliminar la carrera.');
+            }
+
+            if (careerForm.dataset.careerId === String(career.id)) {
+                resetCareerEditor();
+            }
+            careerFormCard.hidden = true;
+            careerListCard.hidden = false;
+            await loadCarreras();
+            careerStatus.hidden = false;
+            careerStatus.textContent = result.message;
+        } catch (error) {
+            careerStatus.hidden = false;
+            careerStatus.textContent = error.message;
+        }
+    }
+
+    async function updateMateriaStatus(materiaId, activa) {
+        const careerStatus = document.getElementById('admin-careers-status');
+        try {
+            const response = await fetch(`${apiBaseUrl}/api/admin/materias/${materiaId}/status`, {
+                method: 'PATCH',
+                headers,
+                body: JSON.stringify({ activa }),
+            });
+            const result = await response.json();
+
+            if (response.status === 401) {
+                localStorage.removeItem('auth_token');
+                window.location.replace('/login');
+                return;
+            }
+            if (!response.ok) {
+                const validationMessage = result.errors
+                    ? Object.values(result.errors).flat().join(' ')
+                    : '';
+                throw new Error(validationMessage || result.message || 'No se pudo actualizar el estado de la materia.');
+            }
+
+            await loadCarreras();
         } catch (error) {
             careerStatus.hidden = false;
             careerStatus.textContent = error.message;
@@ -270,9 +406,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             // Si la operación fue exitosa, restablece el formulario y actualiza la lista de carreras.
             resetCareerEditor();
-            careerEditorStatus.hidden = false;
-            careerEditorStatus.textContent = result.message;
+            careerFormCard.hidden = true;
+            careerListCard.hidden = false;
             await loadCarreras();
+            const careerStatus = document.getElementById('admin-careers-status');
+            careerStatus.hidden = false;
+            careerStatus.textContent = result.message;
             // Desplaza la vista hacia la lista de carreras para mostrar el resultado al usuario.
         } catch (error) {
             careerEditorStatus.hidden = false;
@@ -701,7 +840,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Iniciar carga de datos
-    loadCarreras();
     loadUsers();
     loadAdminRequests();
 });
