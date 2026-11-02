@@ -49,6 +49,7 @@
             </div>
         </section>
 
+        <!-- SECCIÓN 2: POSTULACIONES (Oculta por defecto) -->
         <section id="section-postulaciones" style="display: none;">
             <header>
                 <h2>REVISIÓN ACADÉMICA</h2>
@@ -61,19 +62,31 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 2: CARRERAS/MATERIAS (Oculta por defecto) -->
+        <!-- SECCIÓN 3: CARRERAS/MATERIAS (Oculta por defecto) -->
         <section id="section-carreras" style="display: none;">
             <header>
                 <h2>GESTIÓN DEL CATÁLOGO</h2>
                 <h1>Carreras, semestres y materias</h1>
                 <p>Consulta el plan de estudios disponible para las asesorías.</p>
             </header>
-            
-            <div class="card add-card">
+
+            <div class="card career-catalog-actions-card">
+                <div>
+                    <h3>Plan de estudios</h3>
+                    <p>Administra las carreras y consulta las materias organizadas por semestre.</p>
+                </div>
+                <div class="career-catalog-actions">
+                    <button id="show-career-form" class="btn-primary" type="button">+ Agregar carrera</button>
+                    <button id="show-career-list" class="btn-secondary" type="button">🔍 Consultar carreras</button>
+                </div>
+            </div>
+
+            <!-- Formulario de edición de carrera (oculto por defecto) -->
+            <div id="career-form-card" class="card add-card career-view" hidden>
                 <form id="form-carrera" class="career-editor">
                     <div class="career-editor-heading">
                         <h3 id="career-editor-title">Agregar carrera y plan de estudios</h3>
-                        <p>Agrega cada semestre y escribe una materia por línea. Puedes dejar el plan vacío y completarlo después.</p>
+                        <p>Organiza las materias por semestre. Si todavía no tienes el plan, puedes registrarlo más adelante.</p>
                     </div>
                     <label class="career-name-field" for="nombre-carrera">Nombre de carrera</label>
                     <input type="text" id="nombre-carrera" placeholder="Nombre de carrera..." required>
@@ -82,6 +95,7 @@
                         <button id="add-semester" class="btn-secondary" type="button">+ Agregar semestre</button>
                     </div>
                     <div id="career-semester-editor" class="career-semester-editor"></div>
+                    <p id="career-empty-semesters" class="career-empty-plan">Aún no agregas semestres. Usa “Agregar semestre” para comenzar.</p>
                     <div class="career-editor-actions">
                         <button id="career-submit" type="submit" class="btn-primary">+ Agregar carrera</button>
                         <button id="career-cancel-edit" type="button" class="btn-secondary" hidden>Cancelar edición</button>
@@ -90,7 +104,14 @@
                 </form>
             </div>
 
-            <div class="card">
+            <!-- Lista de carreras registradas (oculta por defecto) -->
+            <div id="career-list-card" class="card career-view" hidden>
+                <div class="career-list-heading">
+                    <div>
+                        <h3>Carreras registradas</h3>
+                        <p>Consulta y administra los planes de estudio existentes.</p>
+                    </div>
+                </div>
                 <p id="admin-careers-status" class="admin-inline-status" role="status" aria-live="polite" hidden></p>
                 <ul id="lista-carreras" class="data-list">
                     <!-- Llenado dinámicamente por JS -->
@@ -98,13 +119,15 @@
             </div>
         </section>
 
-        <!-- Supervisión administrativa de solicitudes; las decisiones corresponden al tutor. -->
+        <!-- SECCIÓN 4: SOLICITUDES DE TUTORÍA (Oculta por defecto) -->
         <section id="section-solicitudes" style="display: none;">
             <header>
                 <h2>SEGUIMIENTO ACADÉMICO</h2>
                 <h1>Solicitudes de tutoría</h1>
                 <p>Consulta las solicitudes y sus estados. La aceptación o rechazo la realiza el tutor asignado.</p>
             </header>
+
+            <!--Lista de solicitudes de tutoría (llenado dinámico por JS) --> 
             <div class="card">
                 <p id="admin-requests-status" role="status" aria-live="polite">Cargando solicitudes...</p>
                 <ul id="lista-solicitudes" class="data-list"></ul>

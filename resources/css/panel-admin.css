@@ -170,6 +170,53 @@ header p {
     border: 1px solid #e2e8f0;
 }
 
+#section-carreras > header {
+    margin-bottom: 22px;
+}
+
+#section-carreras > .card {
+    padding: 28px;
+}
+
+.career-view[hidden] {
+    display: none !important;
+}
+
+.career-catalog-actions-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.career-catalog-actions-card h3,
+.career-list-heading h3 {
+    margin: 0 0 6px;
+    color: #1e293b;
+    font-size: 1.15rem;
+}
+
+.career-catalog-actions-card p,
+.career-list-heading p {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.career-catalog-actions-card .career-catalog-actions {
+    justify-content: flex-start;
+}
+
+.career-list-heading {
+    margin-bottom: 12px;
+}
+
+.career-catalog-actions-card .btn-primary {
+    display: inline-flex;
+    align-items: center;
+}
+
 .add-card form {
     display: flex;
     gap: 15px;
@@ -191,13 +238,13 @@ header p {
 
 .career-editor {
     display: grid !important;
-    gap: 12px;
+    gap: 16px;
 }
 
 .career-editor-heading h3 {
-    margin: 0 0 5px;
+    margin: 0 0 7px;
     color: #1e293b;
-    font-size: 1.05rem;
+    font-size: 1.15rem;
 }
 
 .career-editor-heading p {
@@ -226,6 +273,11 @@ header p {
     font: inherit;
 }
 
+.career-editor > input {
+    min-height: 46px;
+    background: #f8fafc;
+}
+
 .career-editor > input:focus,
 .career-semester-editor-item input:focus,
 .career-semester-editor-item textarea:focus {
@@ -245,6 +297,8 @@ header p {
 
 .career-plan-heading {
     margin-top: 4px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
     color: #1e293b;
 }
 
@@ -255,11 +309,12 @@ header p {
 
 .career-semester-editor-item {
     display: grid;
-    gap: 12px;
+    gap: 14px;
     min-width: 0;
-    padding: 14px;
+    padding: 16px;
     border: 1px solid #e2e8f0;
-    border-radius: 9px;
+    border-radius: 10px;
+    background: #f8fafc;
 }
 
 .career-semester-editor-heading label {
@@ -296,6 +351,7 @@ header p {
 
 .career-editor-actions {
     justify-content: flex-start;
+    padding-top: 4px;
 }
 
 .career-editor-actions button:disabled {
@@ -307,7 +363,8 @@ header p {
     background-color: #b38b36;
     color: white;
     border: none;
-    padding: 0 25px;
+    min-height: 42px;
+    padding: 0 18px;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
@@ -406,7 +463,20 @@ header p {
 .career-catalog-item {
     display: grid !important;
     justify-content: stretch !important;
-    gap: 9px;
+    gap: 13px;
+    margin: 0 0 14px;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+.data-list li.career-catalog-item {
+    padding: 18px;
+}
+
+.career-catalog-item:last-child {
+    margin-bottom: 0;
 }
 
 .career-catalog-heading {
@@ -415,6 +485,60 @@ header p {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+}
+
+.career-catalog-heading .user-info-list {
+    display: grid;
+    gap: 5px;
+}
+
+.career-catalog-heading .user-info-list strong {
+    font-size: 1.05rem;
+}
+
+.career-status-active,
+.career-status-inactive {
+    width: fit-content;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 0.75rem !important;
+    font-weight: 700;
+}
+
+.career-status-active {
+    background: #dcfce7;
+    color: #166534 !important;
+}
+
+.career-status-inactive {
+    background: #fee2e2;
+    color: #991b1b !important;
+}
+
+.career-catalog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.career-edit-button,
+.career-delete-button {
+    min-height: 36px;
+    padding: 7px 11px;
+    font-size: 0.82rem;
+}
+
+.career-delete-button {
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+    background: #fff7f7;
+    color: #991b1b;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.career-delete-button:hover {
+    background: #fee2e2;
 }
 
 .tutor-application-item {
@@ -438,9 +562,59 @@ header p {
 }
 
 .career-semester-row {
+    padding: 12px 0 0 8px;
+    border-top: 1px solid #f1f5f9;
     color: #475569;
     font-size: 0.9rem;
     line-height: 1.5;
+}
+
+.career-semester-row > strong {
+    display: block;
+    color: #334155;
+    font-size: 0.84rem;
+}
+
+.career-subject-list {
+    display: grid;
+    gap: 6px;
+    margin: 6px 0 12px 18px;
+}
+
+.career-subject-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 58px 88px;
+    align-items: center;
+    gap: 10px;
+}
+
+.career-subject-active,
+.career-subject-inactive {
+    font-size: 0.78rem;
+    font-weight: 650;
+}
+
+.career-subject-active {
+    color: #166534;
+}
+
+.career-subject-inactive {
+    color: #991b1b;
+}
+
+.career-subject-status-button {
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 3px 8px;
+    width: 88px;
+    background: #fff;
+    color: #334155;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.career-subject-status-button:hover {
+    background: #f1f5f9;
 }
 
 .career-empty-plan {
@@ -524,6 +698,36 @@ header p {
 }
 
 @media (max-width: 700px) {
+    .main-content {
+        padding: 24px 18px;
+    }
+
+    #section-carreras > .card {
+        padding: 18px;
+    }
+
+    .career-catalog-actions-card .career-catalog-actions {
+        width: 100%;
+    }
+
+    .career-catalog-actions-card .career-catalog-actions button {
+        flex: 1 1 180px;
+        justify-content: center;
+    }
+
+    .career-catalog-heading {
+        align-items: flex-start;
+    }
+
+    .career-catalog-actions {
+        width: 100%;
+    }
+
+    .career-subject-row {
+        grid-template-columns: minmax(0, 1fr) 58px 88px;
+        gap: 6px;
+    }
+
     .tutor-application-item {
         grid-template-columns: 1fr;
     }
