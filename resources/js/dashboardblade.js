@@ -92,6 +92,10 @@ avatarInput.addEventListener('change', async () => {
         return;
     }
 
+    // Guardamos la URL actual de la imagen (por si la subida falla, poder restaurarla)
+    const previousImageSrc = avatarImage.src;
+    const hadPreviousImage = !avatarImage.hidden;
+
     // Vista previa inmediata (Feedback rápido para el usuario)
     const temporaryUrl = URL.createObjectURL(file);
     avatarImage.src = temporaryUrl;
@@ -99,7 +103,7 @@ avatarInput.addEventListener('change', async () => {
     avatarFallback.hidden = true;
     avatarMessage.textContent = 'Subiendo fotografía...';
 
-    // Preparar datos para enviar (Multipart/form-data)
+    // Preparar datos para enviar
     const formData = new FormData();
     formData.append('image', file);
 
@@ -109,21 +113,20 @@ avatarInput.addEventListener('change', async () => {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer ' + token,
-                // ATENCIÓN: No poner 'Content-Type'. Fetch lo calcula automáticamente con el Boundary para FormData.
             },
             body: formData
         });
 
         const data = await res.json();
-
         
         if (!res.ok) {
+            // Extraemos el error pero NO lo mostramos al usuario
             const errors = data.errors ? Object.values(data.errors).flat().join(' ') : data.message;
-            throw new Error(errors || 'Error al subir la imagen.');
+            throw new Error(errors || 'Error de la API');
         }
 
         // Éxito
-        avatarMessage.textContent = data.message; // "Fotografía actualizada correctamente."
+        avatarMessage.textContent = data.message || "Fotografía actualizada correctamente."; 
         avatarMessage.classList.add('success');
         
         // Reemplazar la vista temporal por la URL real guardada en MongoDB
@@ -131,9 +134,24 @@ avatarInput.addEventListener('change', async () => {
         removeAvatarButton.hidden = false;
 
     } catch (error) {
-        avatarMessage.textContent = error.message;
+        // Silenciamos el error real en la consola para depuración
+        console.error("Error silencioso al subir imagen:", error.message);
+        
+        // Mostramos un mensaje genérico y amigable al usuario
+        avatarMessage.textContent = 'No se pudo actualizar la foto en este momento. Intenta más tarde.';
         avatarMessage.classList.add('error');
-        // Si falla, se queda la imagen temporal cargada, pero le avisa al usuario.
+        
+        // Revertir a la imagen anterior si la subida falló
+        if (hadPreviousImage) {
+            avatarImage.src = previousImageSrc;
+        } else {
+            avatarImage.hidden = true;
+            avatarFallback.hidden = false;
+        }
+        
+        // Limpiamos el input para permitir intentar con la misma imagen de nuevo
+        avatarInput.value = '';
+        
     } finally {
         // Liberar memoria del navegador
         URL.revokeObjectURL(temporaryUrl);

@@ -36,8 +36,18 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        server: {
+        host: '0.0.0.0', // Permite conexiones externas al contenedor
+        port: 5173,
+        strictPort: true,
+        origin: 'http://localhost:5173',
+        hmr: {
+            host: 'localhost', // Navegador busca el HMR en localhost
+        },
         watch: {
+            usePolling: true, // Necesario en Docker para detectar cambios de archivos en Windows
             ignored: ['**/storage/framework/views/**'],
         },
+    },
     },
 });
